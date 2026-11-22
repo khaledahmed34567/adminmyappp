@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#000000">
+<!-- ضع هنا سطرَي الأيقونة الأصليين من ملفك كما هما: <link rel="icon" ...> ثم <link rel="apple-touch-icon" ...> -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--s:#111;--s2:#1a1a1a;--b:rgba(255,255,255,.12);--t:#f4f4f4;--t2:#a8a8a8;--a:#7c5cff;--r:#fa4d56;--g:#42be65}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;min-height:100vh;padding:18px}
+.wrap{max-width:760px;margin:0 auto;animation:up .5s both}
+@keyframes up{from{opacity:0;transform:translateY(20px)}}
+.card{background:var(--s);border:1px solid var(--b);border-radius:16px;padding:20px;margin-bottom:14px}
+h1{font-size:20px;margin-bottom:6px}h2{font-size:16px;margin-bottom:12px}
+p.m{color:var(--t2);font-size:13px;line-height:1.8;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--t2);margin:10px 0 5px}
+input,select,textarea{width:100%;padding:10px 12px;background:#0a0a0a;border:1px solid var(--b);border-radius:10px;color:var(--t);font-family:inherit;font-size:13px;outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+textarea{min-height:200px;direction:ltr;text-align:left;font-family:'IBM Plex Mono',monospace;line-height:1.6}
+.btn{padding:10px 16px;border-radius:10px;border:1px solid var(--b);background:var(--s2);color:var(--t);font-family:inherit;font-size:13px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);border-color:var(--a)}
+.btn.p{background:var(--a);border-color:var(--a);color:#fff}
+.btn.d{color:var(--r);border-color:rgba(250,77,86,.4)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg{margin-top:10px;font-size:12.5px;padding:9px 12px;border-radius:10px;display:none;line-height:1.7}
+.msg.ok{display:block;background:rgba(66,190,101,.1);color:var(--g)}
+.msg.er{display:block;background:rgba(250,77,86,.1);color:var(--r)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--b);animation:up .4s both}
+.item small{color:var(--t2);font-size:11px;display:block;margin-top:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+#panel{display:none}
+img.pv{max-width:140px;border-radius:10px;margin-top:8px;display:block}
+::selection{background:#7c5cff;color:#fff}h1,h2,.btn{font-family:'Kufam','IBM Plex Sans Arabic',sans-serif}
+@font-face{font-family:'KH-Head';src:url(https://files.catbox.moe/va4cz0.otf) format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'KH-Head';src:url(https://files.catbox.moe/sgpf34.otf) format('opentype');font-weight:700;font-display:swap}
+@font-face{font-family:'KH-Text';src:url(https://files.catbox.moe/2k6107.otf) format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'KH-Text';src:url(https://files.catbox.moe/4rjalb.otf) format('opentype');font-weight:700;font-display:swap}
+@font-face{font-family:'KH-Time';src:url(https://files.catbox.moe/mplj7v.otf) format('opentype');font-weight:normal;font-display:swap}
+@font-face{font-family:'KH-Note';src:url(https://files.catbox.moe/uqr0yx.otf) format('opentype');font-weight:normal;font-display:swap}
+@font-face{font-family:'KH-Warn';src:url(https://files.catbox.moe/flmb6d.otf) format('opentype');font-weight:normal;font-display:swap}
+@font-face{font-family:'KH-Must';src:url(https://files.catbox.moe/1xmhcz.otf) format('opentype');font-weight:normal;font-display:swap}
+body,p,input,textarea,select,label,.step p,.card p{font-family:'KH-Text','IBM Plex Sans Arabic',system-ui,sans-serif}
+h1,h2,h3,.tabs button,.btn,.chip,.drawer a,.drawer button,.dc,.gbtn,.vis,.fwt,.brand{font-family:'KH-Head','Kufam','IBM Plex Sans Arabic',system-ui,sans-serif}
+.date,.pm{font-family:'KH-Time','KH-Text','IBM Plex Sans Arabic',system-ui,sans-serif}
+.tabsb{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;position:sticky;top:0;z-index:5;background:rgba(0,0,0,.85);backdrop-filter:blur(10px)}.tabsb .btn{white-space:nowrap}.tabsb .on{background:rgba(124,92,255,.85);border-color:#7c5cff}
+@media(max-width:600px){body{padding:12px}.card{padding:16px}.two{grid-template-columns:1fr}#ovs .two{grid-template-columns:1fr 1fr!important}.item{flex-direction:column;align-items:stretch}.item .row{justify-content:flex-start}.row .btn{flex:1 1 auto}input,select,textarea{font-size:16px}.tabsb{margin:0 -12px;padding:4px 12px 12px}.top{flex-wrap:wrap;gap:8px}h1{font-size:18px}}
+
+*{-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}
+.btn{border-radius:14px;transition:transform .25s cubic-bezier(.32,.72,0,1),opacity .2s,border-color .2s,box-shadow .2s}.btn:active{transform:scale(.96);opacity:.88}
+.card{border-radius:20px}
+input,select,textarea{border-radius:13px}
+.wdrop{border:2px dashed rgba(255,255,255,.2);border-radius:16px;padding:28px 14px;text-align:center;color:#a8a8a8;cursor:pointer;transition:.2s;margin:10px 0}.wdrop:hover{border-color:#7c5cff;color:#fff}
+#wbar{height:5px;border-radius:5px;background:#222;overflow:hidden;margin:8px 0;display:none}#wprog{display:block;height:100%;width:0;background:#7c5cff;transition:width .3s}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:12px}
+.wi{position:relative;border:2px solid transparent;border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;background:#0a0a0a}.wi img{width:100%;height:100%;object-fit:cover;display:block}.wi.sel{border-color:#7c5cff;box-shadow:0 0 0 3px rgba(124,92,255,.3)}
+.wi .x{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;cursor:pointer;font-size:13px}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+
+<div class="card" id="login">
+  <h1>لوحة التحكم</h1>
+  <p class="m">أول مرة: اكتب بريد المدير واختر كلمة مرور ثم اضغط إنشاء كلمة المرور، وسيصلك رابط تفعيل على البريد. بعد التفعيل استخدم دخول.</p>
+  <label>البريد الإلكتروني</label><input type="email" id="em" dir="ltr">
+  <label>كلمة المرور</label><input type="password" id="pw" dir="ltr">
+  <div class="row">
+    <button class="btn p" onclick="signIn()">دخول</button>
+    <button class="btn" onclick="firstTime()">إنشاء كلمة المرور لأول مرة</button>
+    <button class="btn" onclick="reset()">نسيت كلمة المرور</button>
+  </div>
+  <div class="msg" id="lm"></div>
+</div>
+
+<div id="panel">
+  <div class="top"><h1>إدارة المحتوى</h1><div class="row" style="margin:0"><button class="btn" onclick="openSite()">فتح الموقع</button><button class="btn" onclick="out()">خروج</button></div></div>
+  <div class="tabsb" id="tabsb"></div>
+  <div class="card"><h2>نظرة عامة</h2><div id="ovs"></div></div>
+
+  <div class="card">
+    <h2 id="ft">محتوى جديد</h2>
+    <div class="two">
+      <div><label>النوع</label><select id="type"><option value="post">مقال في المدونة</option><option value="news">خبر</option><option value="project">مشروع</option></select></div>
+      <div><label>العنوان</label><input id="title"></div>
+    </div>
+    <label>ملخص قصير</label><input id="summary">
+    <label>الوسوم (افصل بينها بفاصلة)</label><input id="tags">
+    <div class="row"><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="pinned" style="width:auto;margin:0">تثبيت في الرئيسية</label><label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="draft" style="width:auto;margin:0">مسودة (غير منشور)</label></div>
+    <label>رابط خارجي (اختياري، للمشاريع)</label><input id="link" dir="ltr">
+    <label>صورة الغلاف</label>
+    <input type="file" id="coverfile" accept="image/*" onchange="upCover()">
+    <input id="cover" dir="ltr" placeholder="رابط الصورة يظهر هنا" style="margin-top:6px">
+    <img class="pv" id="cpv" style="display:none" alt="">
+
+    <label>المحتوى (JSON أو نص عادي)</label>
+    <textarea id="body" placeholder='[{"text":"عنوان","h":true,"color":"#7c5cff"},{"text":"فقرة عادية"},{"text":"نص ملون","color":"#42be65","bold":true}]'></textarea>
+    <details style="margin:10px 0"><summary class="btn" style="display:inline-block">إضافة كود برمجي</summary>
+<label>اللغة (python, javascript, bash, sql, html, java, php, go ...)</label><input id="cdl" dir="ltr">
+<label>عنوان الكود</label><input id="cdt">
+<label>الكود</label><textarea id="cdc" style="min-height:140px"></textarea>
+<label>شرح الأسطر (كل سطر بالشكل: 1-3: الشرح)</label><textarea id="cdn" style="min-height:90px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<label>شرح عام (اختياري)</label><input id="cdx">
+<div class="row"><button class="btn p" onclick="addCode()">إدراج الكود في المقال</button></div></details>
+<details style="margin:10px 0"><summary class="btn" style="display:inline-block">مساعد الذكاء الاصطناعي</summary>
+<label>مفتاح Gemini (يُحفظ في هذا المتصفح فقط)</label><input id="agk" type="password" dir="ltr" autocomplete="off">
+<div class="row"><button class="btn p" onclick="aiFill()">اقتراح ملخص ووسوم من المحتوى</button></div></details>
+<p class="m" style="margin-top:6px">الحقول المدعومة للكتلة: text وcolor وbold وsize وalign وh للعنوان وlink لرابط قابل للضغط (والروابط داخل النص تتحول تلقائيًا). للصورة: {"img":"رابط"}</p>
+
+    <div class="two">
+      <div><label>النص (لكتلة ملونة أو تنبيه أو تحذير أو يجب)</label><input id="bt"></div>
+      <div><label>اللون</label><input type="color" id="bc" value="#7c5cff" style="height:40px;padding:3px"></div>
+    </div>
+    <div class="row">
+      <button class="btn" onclick="addBlock()">إضافة كتلة نص ملونة</button>
+      <button class="btn" onclick="addBox('note')">إضافة تنبيه</button>
+      <button class="btn" onclick="addBox('warn')">إضافة تحذير</button>
+      <button class="btn" onclick="addBox('must')">إضافة يجب</button>
+      <button class="btn" onclick="document.getElementById('imgfile').click()">رفع صورة وإدراجها</button>
+      <button class="btn" onclick="document.getElementById('vfile').click()">رفع فيديو MP4 وإدراجه</button><input type="file" id="vfile" accept="video/mp4,.mp4" style="display:none" onchange="upVideo()">
+      <div style="width:100%"><label>أو رابط مباشر لفيديو (.mp4) أو ملف (.pdf)</label><input id="lnk" dir="ltr" placeholder="https://.../file.mp4"><div class="row"><button class="btn" onclick="addLink()">إدراج الرابط في المقال</button></div></div>
+      <input type="file" id="imgfile" accept="image/*" style="display:none" onchange="upInline()">
+    </div>
+    <div class="row">
+      <button class="btn p" id="savebtn" onclick="save()">نشر</button>
+      <button class="btn" onclick="resetForm()">إلغاء التعديل</button>
+    </div>
+    <div class="msg" id="fm"></div>
+  </div>
+
+  <div class="card"><h2>عدد الزوار</h2><p class="m" id="vinfo"></p><label>العدد القديم (يُضاف عليه العدد الفعلي تلقائيًا)</label><input type="number" id="vbase" min="0"><div class="row"><button class="btn p" onclick="saveBase()">حفظ العدد القديم</button></div><label>إعلان يظهر لكل الزوار (اتركه فارغًا للإخفاء)</label><input id="vnotice"><div class="row"><button class="btn p" onclick="saveNotice()">نشر الإعلان</button></div><div class="msg" id="vm"></div></div>
+  <div class="card" id="vbox"><h2>اكتشاف الثغرات</h2>
+<p class="m">انشر الثغرة بعد إصلاحها وبموافقة الجهة المعنية فقط. حقلا التفاصيل والإصلاح يقبلان نصًا عاديًا أو JSON (أكواد وتنبيهات وتنسيقات) مثل المقالات.</p>
+<label>عنوان الثغرة</label><input id="vtitle">
+<div class="two"><div><label>اسم الشركة</label><input id="vco"></div><div><label>نوع الثغرة (XSS وIDOR ...)</label><input id="vkind" dir="ltr"></div></div>
+<label>شعار الشركة</label><input type="file" id="vlogof" accept="image/*" onchange="upVLogo()"><input id="vlogo" dir="ltr" placeholder="رابط الشعار" style="margin-top:6px">
+<div class="two"><div><label>الخطورة</label><select id="vsev"><option value="critical">حرجة</option><option value="high">عالية</option><option value="medium" selected>متوسطة</option><option value="low">منخفضة</option><option value="info">معلومة</option></select></div><div><label>الحالة</label><select id="vstat"><option value="fixed">تم الإصلاح</option><option value="reported">تم الإبلاغ</option><option value="disclosed">تم النشر</option></select></div></div>
+<div class="two"><div><label>CVSS (اختياري)</label><input id="vcvss" dir="ltr"></div><div></div></div>
+<div class="two"><div><label>تاريخ الاكتشاف</label><input type="date" id="vdf"></div><div><label>تاريخ الإصلاح</label><input type="date" id="vdx"></div></div>
+<label>ملخص قصير</label><textarea id="vsum" style="min-height:70px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<label>تفاصيل الثغرة (نص أو JSON)</label><textarea id="vdet" style="min-height:140px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<label>طريقة الإصلاح (نص أو JSON)</label><textarea id="vfix" style="min-height:120px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<label>مراجع (رابط في كل سطر)</label><textarea id="vref" dir="ltr" style="min-height:70px"></textarea>
+<div class="row"><button class="btn p" onclick="saveVuln()">حفظ ونشر</button><button class="btn" onclick="clearVuln()">إلغاء التعديل</button></div>
+<div class="msg" id="vm2"></div><div id="vlist" style="margin-top:10px"></div></div>
+<div class="card" id="usbox"><h2>المستخدمون ومفاتيح الذكاء الاصطناعي <span id="uscnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">اختر مستخدمًا ثم أضف له مفتاح Gemini خاصًا به. يستخدمه الموقع والتطبيق إذا لم يضف المستخدم مفتاحه بنفسه.</p>
+<input id="ausearch" placeholder="ابحث بالاسم أو البريد أو الهاتف" oninput="renderUsers()">
+<div class="row"><button class="btn" onclick="exportUsers()">تصدير القائمة CSV</button></div>
+<label>مدة الحظر عند الضغط على حظر</label><select id="bandur"><option value="0">دائم</option><option value="86400000">24 ساعة</option><option value="604800000">7 أيام</option><option value="2592000000">30 يومًا</option></select>
+<div id="ausers" style="margin:10px 0"></div>
+<div id="aform" style="display:none"><label id="aulabel"></label><label>مفتاح Gemini</label><input id="aukey" type="password" dir="ltr" autocomplete="off"><label>الموديل (اختياري)</label><input id="aumodel" dir="ltr" placeholder="مثل gemini-3.8-flash">
+<div class="row"><button class="btn p" onclick="saveAiKey()">حفظ المفتاح</button><button class="btn d" onclick="delAiKey()">إزالة المفتاح</button></div>
+<label>مفتاح IntelBase لفحص التسريبات (x-api-key)</label><input id="auib" type="password" dir="ltr" autocomplete="off">
+<div class="row"><button class="btn p" onclick="saveIbKey()">حفظ مفتاح IntelBase</button><button class="btn d" onclick="delIbKey()">إزالة مفتاح IntelBase</button></div></div>
+<div class="msg" id="aum"></div></div>
+<div class="card" id="supbox"><h2>الدعم الفني <span id="supcnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">محادثات المستخدمين من التطبيق. افتح محادثة ثم ردّ بنص، وأضف صورة أو زرًّا برابط عند الحاجة.</p>
+<div class="msg" id="supm"></div>
+<div id="suplist" style="margin:10px 0"></div>
+<div id="supthread" style="display:none"><h3 id="suphd" style="margin:8px 0"></h3>
+<div class="row"><button class="btn d" onclick="supBan()">حظر هذا المستخدم</button></div>
+<div id="supmsgs" style="max-height:340px;overflow-y:auto;margin-bottom:10px"></div>
+<textarea id="suptxt" style="min-height:90px;direction:rtl;text-align:right;font-family:inherit" placeholder="اكتب الرد"></textarea>
+<label>صورة (اختياري)</label><input type="file" id="supimgf" accept="image/*" onchange="supImg()">
+<div class="two"><div><label>نص الزر (اختياري)</label><input id="supbl"></div><div><label>رابط الزر</label><input id="supbu" dir="ltr" placeholder="https://... أو #/library"></div></div>
+<div class="row"><button class="btn p" onclick="supSend()">إرسال الرد</button></div></div></div>
+<div class="card" id="wlbox"><h2>رسالة الاستقبال في التطبيق</h2>
+<p class="m">تظهر مرة واحدة عند أول دخول، وفي بطاقة الرئيسية. اترك الحقول فارغة لاستخدام النص الافتراضي.</p>
+<label>العنوان</label><input id="wltitle"><label>النص</label><textarea id="wltext" style="min-height:100px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<div class="row"><button class="btn p" onclick="saveWelcome()">حفظ</button></div><div class="msg" id="wlm"></div></div>
+<div class="card" id="ibgbox"><h2>مفتاح IntelBase (للجميع)</h2>
+<p class="m">الصق مفتاحك هنا مرة واحدة وسيستخدمه كل المستخدمين في فحص التسريبات بدون أي مفتاح من عندهم. الوضع "مفتاح" يخزّن المفتاح في Firestore ويقرؤه التطبيق عند الدخول، فيمكن لمستخدم متمرّس استخراجه. الوضع "وسيط آمن" لا يخزّن شيئًا ويستخدم دالة السحابة ibLookup التي تحتفظ بالمفتاح في Secret Manager. للأمان الأشد استخدم الوسيط.</p>
+<label>الوضع</label><select id="ibgmode"><option value="key">مفتاح مخزَّن</option><option value="proxy">وسيط آمن (دالة السحابة)</option></select>
+<label>المفتاح (للوضع الأول فقط)</label><input id="ibgk" type="password" dir="ltr" autocomplete="off">
+<div class="row"><button class="btn" onclick="testIbg()">اختبار المفتاح</button><button class="btn p" onclick="saveIbg()">حفظ</button><button class="btn d" onclick="delIbg()">حذف الإعداد</button></div><div class="msg" id="ibgm"></div></div>
+<div class="card" id="banbox"><h2>المحظورون <span id="bancnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">الحظر فوري: يُغلق حساب المستخدم ولا يستطيع القراءة أو الكتابة في قاعدة البيانات. يمكن رفعه في أي وقت.</p>
+<div id="banlist"></div><div class="msg" id="banm"></div></div>
+<div class="card" id="shbox"><h2>طلبات تصوير الشاشة <span id="shcnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">التصوير ممنوع للجميع افتراضيًا. عند الموافقة يُفتح لهذا المستخدم لمدة 24 ساعة ثم يُغلق تلقائيًا. يبقى ممنوعًا داخل قارئ الكتب.</p>
+<div class="msg" id="shm"></div><div id="shlist"></div></div>
+<div class="card" id="appbox"><h2>تطبيق الأندرويد</h2>
+<p class="m">تظهر هذه البيانات في صفحة "تحميل التطبيق" بالموقع.</p>
+<label>أيقونة التطبيق</label><input type="file" id="apic" accept="image/*" onchange="upAppIcon()"><input id="apicu" dir="ltr" placeholder="رابط الأيقونة" style="margin-top:6px">
+<label>صور من التطبيق (اختر عدة صور)</label><input type="file" id="apshot" accept="image/*" multiple onchange="upAppShots(this.files)"><div id="apshots" class="wgrid"></div>
+<p class="m">إن كان الرابط من GitHub Releases فصفحة التحميل في الموقع تعرض دائمًا آخر إصدار تلقائيًا (الرابط والإصدار والحجم). أما التطبيق نفسه فيكتشف التحديثات من المستودع مباشرة ويُشعر المستخدم.</p>
+<label>رابط التحميل المباشر (ينتهي بـ .apk)</label><input id="apkurl" dir="ltr" placeholder="https://github.com/.../releases/download/.../KhaledAhmed.apk">
+<div class="two"><div><label>رقم الإصدار</label><input id="apver" dir="ltr" placeholder="1.0.0"></div><div><label>الحجم (ميجابايت)</label><input id="apsz" dir="ltr" inputmode="decimal"></div></div>
+<div class="row"><button class="btn" onclick="apkAuto()">جلب الحجم تلقائيًا</button><button class="btn p" onclick="saveApp()">حفظ</button></div>
+<h2 style="margin-top:20px">إضافة تحديث إلى السجل</h2>
+<label>رقم الإصدار</label><input id="upv" dir="ltr">
+<label>ما الجديد؟</label><textarea id="upn" style="min-height:80px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<div class="row"><button class="btn p" onclick="addUpdate()">إضافة التحديث</button></div>
+<div id="uplist" style="margin-top:10px"></div><div class="msg" id="apm"></div></div>
+<div class="card" id="ntc"><h2>إشعار للمستخدمين</h2>
+<p class="m">يصل إشعارًا بصوت وعلى الشاشة وفي الستارة. فورًا إن كان التطبيق مفتوحًا، وخلال 15 دقيقة تقريبًا إن كان مغلقًا. للوصول الفوري والتطبيق مغلق انشر دالة السحابة (مجلد functions).</p>
+<label>العنوان</label><input id="ntt"><label>النص</label><input id="ntb"><label>رابط داخل التطبيق (اختياري، مثل #/library)</label>\1
+<label>صورة الإشعار (اختياري)</label><input type="file" id="ntf" accept="image/*" onchange="upNtImg()"><input id="nti" dir="ltr" placeholder="رابط الصورة https://" style="margin-top:6px">
+<div class="two"><div><label>نص الزر (اختياري)</label><input id="ntbl"></div><div><label>رابط الزر</label><input id="ntbu" dir="ltr" placeholder="https://... أو #/support"></div></div>
+<div class="row"><button class="btn p" onclick="sendNotify()">إرسال الإشعار</button></div><div class="msg" id="ntm"></div></div>
+<div class="card" id="wbox"><h2>الخلفيات <span id="wcnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">اختر عدة صور دفعة واحدة (30 صورة أو أكثر) أو اسحبها هنا. كل صورة تُرفع كخلفية مستقلة بدون أي نص.</p>
+<div class="wdrop" onclick="document.getElementById('wfiles').click()" ondragover="event.preventDefault()" ondrop="event.preventDefault();upWalls(event.dataTransfer.files)">اضغط لاختيار الصور أو اسحبها هنا</div>
+<input type="file" id="wfiles" accept="image/*" multiple style="display:none" onchange="upWalls(this.files)">
+<div id="wbar"><i id="wprog"></i></div><div class="msg" id="wm"></div>
+<div class="row"><button class="btn" onclick="wallSelAll()">تحديد الكل</button><button class="btn d" onclick="wallDelSel()">حذف المحدد</button></div>
+<div id="wgrid" class="wgrid"></div></div>
+<div class="card"><h2>المكتبة</h2>
+<details><summary class="btn" style="display:inline-flex">إدارة الكتّاب</summary>
+<label>اسم الكاتب</label><input id="aun">
+<label>صورة الكاتب</label><input type="file" id="aufile" accept="image/*" onchange="upAuPhoto()"><input id="aup" dir="ltr" placeholder="رابط الصورة" style="margin-top:6px">
+<label>نبذة عن الكاتب</label><textarea id="aub" style="min-height:90px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<div class="row"><button class="btn p" onclick="saveAuthor()">حفظ الكاتب</button><button class="btn" onclick="clearAu()">إلغاء التعديل</button></div>
+<div id="aulist" style="margin-top:10px"></div></details>
+<details open style="margin-top:10px"><summary class="btn" style="display:inline-flex">إضافة أو تعديل كتاب</summary>
+<label>اسم الكتاب</label><input id="bkt">
+<label>الوصف</label><textarea id="bkd" style="min-height:90px;direction:rtl;text-align:right;font-family:inherit"></textarea>
+<div class="two"><div><label>الفئة</label><input id="bkc" list="bkcats"><datalist id="bkcats"></datalist></div><div><label>الكاتب</label><select id="bka"></select></div></div>
+<label>غلاف الكتاب</label><input type="file" id="bkcvf" accept="image/*" onchange="upBkCover()"><input id="bkcv" dir="ltr" placeholder="رابط الغلاف" style="margin-top:6px">
+<label>ملف الكتاب (ينتهي بـ .pdf وحتى 25 ميجابايت)</label><input type="file" id="bkpdf" accept="application/pdf,.pdf">
+<label>أو رابط مباشر لملف PDF (ينتهي بـ .pdf)</label><input id="bkurl" dir="ltr" placeholder="https://.../book.pdf">
+<p class="m" id="bkhint" style="margin-top:6px"></p>
+<div class="row"><button class="btn p" onclick="saveBook()">حفظ الكتاب</button><button class="btn" onclick="clearBook()">إلغاء التعديل</button></div>
+</details>
+<div class="msg" id="libm"></div>
+<div id="bklist" style="margin-top:10px"></div></div>
+<div class="card" data-sec="pay" id="paybox"><h2>طلبات الدفع <span id="paycnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">راجع الإيصال ثم وافق أو ارفض. الموافقة تفعّل الباقة (30 يومًا شهري، 365 سنوي، وتُمدَّد من تاريخ الانتهاء إن كانت نفس الباقة سارية) وتنشئ فاتورة ناجحة. الرفض ينشئ فاتورة فاشلة مع السبب.</p>
+<label>تصفية</label><select id="payfilter" onchange="payFilter(this.value)"><option value="all">الكل</option><option value="pending">قيد المراجعة</option><option value="approved">مقبول</option><option value="rejected">مرفوض</option></select>
+<div class="msg" id="paym"></div><div id="paylist" style="margin-top:10px"></div></div>
+
+<div class="card" data-sec="pay" id="subbox"><h2>الاشتراكات <span id="sbcnt" style="color:#a8a8a8;font-size:13px"></span></h2>
+<p class="m">منح اشتراك يدويًا أو إلغاء اشتراك قائم.</p>
+<label>المستخدم</label><select id="sbuser"></select>
+<div class="two"><div><label>الباقة</label><select id="sbplan"><option value="plus">plus</option><option value="pro">pro</option></select></div><div><label>عدد الأيام</label><input type="number" id="sbdays" value="30" min="1" dir="ltr"></div></div>
+<div class="row"><button class="btn p" onclick="payGrant()">منح الاشتراك</button></div>
+<div class="msg" id="sbm"></div><div id="sblist" style="margin-top:10px"></div></div>
+
+<div class="card" data-sec="pay" id="pcbox"><h2>إعدادات الباقات والدفع</h2>
+<p class="m">الباقات والحدود تُحرَّر بصيغة JSON على نفس البنية المخزنة في khmeta/payconf (القيمة -1 غير محدود، 0 ممنوع). مفاتيح الحدود: chat, leak, pdf, offline, cvedays, widgets.</p>
+<label>العملة</label><input id="pccur" dir="ltr" placeholder="EGP">
+<label>الباقات (JSON)</label><textarea id="pcplans" style="min-height:160px"></textarea>
+<label>الحدود (JSON)</label><textarea id="pclim" style="min-height:160px"></textarea>
+<h2 style="margin-top:16px">طرق الدفع</h2><div id="pcmeth"></div>
+<div class="row"><button class="btn p" onclick="payConfSave()">حفظ الإعدادات</button><button class="btn" onclick="loadPayConf()">إعادة التحميل</button></div>
+<div class="msg" id="pcm"></div></div>
+
+<div class="card" data-sec="pay" id="pkbox"><h2>مفاتيح التشفير ورمز QR</h2>
+<p class="m">المفتاح الخاص يبقى في هذا المتصفح فقط (localStorage). احفظ نسخة احتياطية، فبدونها لا تستطيع فك رموز الفواتير القديمة. إنشاء مفتاح جديد يجعل رموز الفواتير السابقة غير قابلة للفك.</p>
+<div class="row"><button class="btn p" onclick="payGenKeys()">إنشاء مفاتيح جديدة</button><button class="btn" onclick="payKeyBackup()">تنزيل نسخة المفتاح الخاص</button><button class="btn" onclick="document.getElementById('pkrest').click()">استعادة المفتاح الخاص</button></div>
+<input type="file" id="pkrest" accept=".json,application/json" style="display:none" onchange="payKeyRestore()">
+<div class="msg" id="pkm"></div>
+<h2 style="margin-top:18px">فحص رمز فاتورة</h2>
+<label>الرمز (يبدأ بـ TAM1.)</label><input id="qrtxt" dir="ltr">
+<div class="row"><button class="btn p" onclick="payQrDecode()">فك الرمز</button><button class="btn" onclick="payQrCam()">كاميرا</button><button class="btn" onclick="document.getElementById('qrfile').click()">صورة الفاتورة</button></div>
+<input type="file" id="qrfile" accept="image/*" style="display:none" onchange="payQrImg()">
+<video id="qrvid" playsinline muted style="display:none;width:100%;max-width:360px;border-radius:12px;margin-top:10px"></video>
+<div class="msg" id="qrm"></div><div id="qrout" style="margin-top:10px"></div></div>
+<div class="card"><h2>الرسائل الواردة <span id="unread"></span></h2><div id="inbox">لا توجد رسائل.</div></div>
+  <div class="card"><h2>المحتوى المنشور</h2><p class="m" id="cnts"></p><div id="list"></div></div>
+</div>
+</div>
+
+<script src="qr.js"></script>
+<script src="tam.js"></script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {getAuth,initializeAuth,indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence,signInWithEmailAndPassword,createUserWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {getFirestore,collection,getDocs,getDoc,addDoc,setDoc,doc,deleteDoc,query,orderBy,onSnapshot,updateDoc,limit,where} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+var ADMIN='khaledahmedelbrbary80@gmail.com';
+var IMGBB='36b0e2658ed6fad2ca48081442f1539b';
+var app=initializeApp({apiKey:"AIzaSyCTGnFOK7m_xNod8mwBPB5HTgTP2BrNm6o",authDomain:"cyberintel-d0d4f.firebaseapp.com",projectId:"cyberintel-d0d4f",storageBucket:"cyberintel-d0d4f.firebasestorage.app",messagingSenderId:"533279564815",appId:"1:533279564815:web:d373567c2be86311127af7a"});
+var auth=(function(){try{return initializeAuth(app,{persistence:[indexedDBLocalPersistence,browserLocalPersistence,browserSessionPersistence]})}catch(e){return getAuth(app)}})(),db=getFirestore(app),editing=null,CACHE=[];
+function $(i){return document.getElementById(i)}
+function msg(id,t,k){var e=$(id);e.textContent=t;e.className='msg '+k}
+function emailOk(){var e=$('em').value.trim().toLowerCase();if(e!==ADMIN){msg('lm','هذا البريد غير مصرح له.','er');return null}return e}
+
+window.firstTime=async function(){
+  var e=emailOk();if(!e)return;var p=$('pw').value;
+  if(p.length<8){msg('lm','كلمة المرور 8 أحرف على الأقل.','er');return}
+  try{
+    var c=await createUserWithEmailAndPassword(auth,e,p);
+    await sendEmailVerification(c.user);
+    await signOut(auth);
+    msg('lm','تم إنشاء الحساب. افتح رابط التفعيل المرسل إلى بريدك ثم اضغط دخول.','ok');
+  }catch(x){
+    msg('lm',x.code==='auth/email-already-in-use'?'الحساب موجود بالفعل، استخدم دخول أو نسيت كلمة المرور.':(x.message||x.code),'er');
+  }
+};
+window.signIn=async function(){
+  var e=emailOk();if(!e)return;
+  try{
+    var c=await signInWithEmailAndPassword(auth,e,$('pw').value);
+    if(!c.user.emailVerified){await sendEmailVerification(c.user);await signOut(auth);msg('lm','البريد غير مفعّل. أرسلنا رابط تفعيل جديدًا.','er')}
+  }catch(x){msg('lm','بيانات الدخول غير صحيحة.','er')}
+};
+window.reset=async function(){
+  var e=emailOk();if(!e)return;
+  try{await sendPasswordResetEmail(auth,e);msg('lm','تم إرسال رابط إعادة التعيين.','ok')}catch(x){msg('lm',x.message||x.code,'er')}
+};
+window.out=function(){signOut(auth)};
+onAuthStateChanged(auth,function(u){
+  var ok=u&&u.emailVerified&&u.email.toLowerCase()===ADMIN;
+  $('login').style.display=ok?'none':'block';$('panel').style.display=ok?'block':'none';
+  if(ok){loadList();loadVis();watchInbox();loadLib();loadWalls();loadApp();loadVulns();loadUsers();loadSupport();loadWelcome();loadIbg();loadBans();loadShots();loadPay();if(!window._it){window._it=1;initTabs()}}
+});
+
+async function upload(file){
+  var fd=new FormData();fd.append('image',file);
+  var r=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB,{method:'POST',body:fd});
+  var j=await r.json();
+  if(!j.success)throw new Error('upload');
+  return j.data.url;
+}
+window.upCover=async function(){
+  var f=$('coverfile').files[0];if(!f)return;
+  msg('fm','جارِ رفع الغلاف','ok');
+  try{var u=await upload(f);$('cover').value=u;$('cpv').src=u;$('cpv').style.display='block';msg('fm','تم رفع الغلاف.','ok')}catch(e){msg('fm','فشل رفع الصورة.','er')}
+};
+function getBlocks(){
+  var raw=$('body').value.trim();if(!raw)return [];
+  try{var d=JSON.parse(raw);if(Array.isArray(d))return d}catch(e){}
+  return raw.split(/\n\s*\n/).map(function(t){return {text:t.trim()}});
+}
+function setBlocks(a){$('body').value=JSON.stringify(a,null,1)}
+window.upInline=async function(){
+  var f=$('imgfile').files[0];if(!f)return;
+  msg('fm','جارِ رفع الصورة','ok');
+  try{var u=await upload(f);var a=getBlocks();a.push({img:u});setBlocks(a);msg('fm','تم رفع الصورة وإدراجها في المحتوى.','ok')}catch(e){msg('fm','فشل رفع الصورة.','er')}
+  $('imgfile').value='';
+};
+window.addBlock=function(){
+  var t=$('bt').value.trim();if(!t)return;
+  var a=getBlocks();a.push({text:t,color:$('bc').value});setBlocks(a);$('bt').value='';
+};
+window.addCode=function(){
+  var c=$('cdc').value.replace(/\s+$/,'');if(!c){msg('fm','الصق الكود أولًا.','er');return}
+  var notes=[];$('cdn').value.split('\n').forEach(function(l){var m=l.trim().match(/^([\d,\s\-]+)[:：]\s*(.+)$/);if(m)notes.push({lines:m[1].replace(/\s/g,''),text:m[2]})});
+  var b={code:c,lang:$('cdl').value.trim().toLowerCase(),title:$('cdt').value.trim()};if(notes.length)b.notes=notes;if($('cdx').value.trim())b.explain=$('cdx').value.trim();
+  var a=getBlocks();a.push(b);setBlocks(a);['cdc','cdn','cdt','cdx'].forEach(function(i){$(i).value=''});msg('fm','تم إدراج الكود في المحتوى.','ok');
+};
+function siteUrl(ask){var u='';try{u=localStorage.getItem('siteurl')||''}catch(e){}if(!u&&ask){u=prompt('اكتب رابط الموقع الرئيسي (مثال: https://example.com/)')||'';if(u)try{localStorage.setItem('siteurl',u)}catch(e){}}return u}
+window.openSite=function(){var u=siteUrl(true);if(u)window.open(u,'_blank')};
+window.openItem=function(id){var u=siteUrl(true);if(u)window.open(u.replace(/#.*$/,'')+'#/item/'+id,'_blank')};
+var inboxOn=false;
+function watchInbox(){
+  if(inboxOn)return;inboxOn=true;
+  onSnapshot(query(collection(db,'khmsgs'),orderBy('t','desc')),function(s){
+    var L=$('inbox');L.innerHTML='';var un=0;
+    if(s.empty)L.textContent='لا توجد رسائل.';
+    s.forEach(function(ds){
+      var m=ds.data();if(!m.read)un++;
+      var r=document.createElement('div');r.className='item';
+      var l=document.createElement('div'),b=document.createElement('b');b.textContent=(m.read?'':'جديد - ')+(m.subject||'')+' - '+(m.name||m.email||'');
+      var p=document.createElement('div');p.textContent=m.msg||'';p.style.cssText='font-size:13px;color:#ccc;margin-top:4px;white-space:pre-wrap';
+      var sm=document.createElement('small');sm.textContent=(m.email||'')+' - '+new Date(m.t).toLocaleString('ar-EG');
+      l.appendChild(b);l.appendChild(p);l.appendChild(sm);
+      var ac=document.createElement('div');ac.className='row';ac.style.marginTop='0';
+      var rp=document.createElement('a');rp.className='btn';rp.textContent='رد بالبريد';rp.href='mailto:'+(m.email||'')+'?subject='+encodeURIComponent('رد: '+(m.subject||''));
+      var rd=document.createElement('button');rd.className='btn';rd.textContent='تمت القراءة';rd.onclick=function(){updateDoc(doc(db,'khmsgs',ds.id),{read:true})};
+      var dl=document.createElement('button');dl.className='btn d';dl.textContent='حذف';dl.onclick=function(){if(confirm('حذف الرسالة؟'))deleteDoc(doc(db,'khmsgs',ds.id))};
+      ac.appendChild(rp);if(!m.read)ac.appendChild(rd);ac.appendChild(dl);r.appendChild(l);r.appendChild(ac);L.appendChild(r);
+    });
+    $('unread').textContent=un?'('+un+' جديدة)':'';document.title=un?'('+un+') Admin':'Admin';UNR=un;renderOv();
+  },function(e){$('inbox').textContent='تعذر قراءة الرسائل: '+(e.code||e.message)});
+}
+window.aiFill=async function(){
+  var k=$('agk').value.trim()||(function(){try{return localStorage.getItem('agk')||''}catch(e){return ''}})();
+  if(!k){msg('fm','أدخل مفتاح Gemini أولًا.','er');return}
+  try{localStorage.setItem('agk',k)}catch(e){}
+  var body=getBlocks().map(function(b){return typeof b==='string'?b:(b.text||b.code||'')}).join('\n').slice(0,12000);
+  if(!body){msg('fm','اكتب المحتوى أولًا.','er');return}
+  msg('fm','جارِ التوليد...','ok');
+  try{
+    var lr=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200',{headers:{'x-goog-api-key':k}}),lj=await lr.json();
+    if(!lr.ok)throw new Error((lj.error&&lj.error.message)||lr.status);
+    var ms=(lj.models||[]).filter(function(m){return /^models\/gemini/i.test(m.name)&&(m.supportedGenerationMethods||[]).indexOf('generateContent')>-1&&!/(embedding|image|tts|live|audio|robotics|vision|computer-use|learnlm|aqa)/i.test(m.name)}).map(function(m){return m.name.replace('models/','')});
+    function sc(n){return parseFloat((n.match(/\d+(\.\d+)?/)||[0])[0])*1000+(/flash/i.test(n)?200:0)-(/lite/i.test(n)?50:0)-(/(preview|exp)/i.test(n)?100:0)}
+    ms.sort(function(x,y){return sc(y)-sc(x)});
+    var bd=JSON.stringify({contents:[{role:'user',parts:[{text:'اقرأ المقال التالي وأعد JSON فقط بالشكل {"summary":"ملخص بالعربية من 25 إلى 40 كلمة","tags":"من 3 إلى 6 وسوم عربية مفصولة بفواصل"}\n\nالعنوان: '+$('title').value+'\n'+body}]}],generationConfig:{responseMimeType:'application/json'}});
+    var t=null,err='';
+    for(var i=0;i<ms.length&&i<4&&t===null;i++){
+      var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(ms[i])+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},body:bd}),j=await r.json();
+      if(r.ok){t=((j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)||[]).map(function(p){return p.text||''}).join('')}else err=(j.error&&j.error.message)||r.status;
+    }
+    if(t===null)throw new Error(err||'لا توجد موديلات متاحة');
+    var o=JSON.parse(t.replace(/```json|```/g,'').trim());
+    $('summary').value=o.summary||'';$('tags').value=o.tags||'';
+    msg('fm','تم اقتراح الملخص والوسوم. راجعهما قبل النشر.','ok');
+  }catch(e){msg('fm','تعذر التوليد: '+e.message,'er')}
+};
+var AUTHS=[],BKS=[],editAu=null,editBk=null;
+function b64(u8){var s='',c=0x8000;for(var i=0;i<u8.length;i+=c)s+=String.fromCharCode.apply(null,u8.subarray(i,i+c));return btoa(s)}
+async function uploadFile(file,kind,onp){
+  var buf=new Uint8Array(await file.arrayBuffer()),CH=700000,n=Math.max(1,Math.ceil(buf.length/CH)),id=doc(collection(db,'khfiles')).id,done=0,i=0;
+  async function w(){while(i<n){var k=i++;await setDoc(doc(db,'khfiles',id,'p',String(k)),{d:b64(buf.subarray(k*CH,(k+1)*CH))});done++;if(onp)onp(done/n)}}
+  try{await Promise.all([w(),w(),w()]);await setDoc(doc(db,'khfiles',id),{kind:kind,name:file.name,size:buf.length,n:n,t:Date.now()})}
+  catch(e){await delFile(id,n);throw e}
+  return id;
+}
+async function delFile(id,n){try{if(n==null){var m=await getDoc(doc(db,'khfiles',id));n=m.exists()?m.data().n:0}for(var i=0;i<n;i++)await deleteDoc(doc(db,'khfiles',id,'p',String(i)));await deleteDoc(doc(db,'khfiles',id))}catch(e){console.error(e)}}
+window.upVideo=async function(){
+  var f=$('vfile').files[0];if(!f)return;
+  if(!/\.mp4$/i.test(f.name)){msg('fm','الملف يجب أن ينتهي بـ .mp4','er');$('vfile').value='';return}
+  if(f.size>40e6){msg('fm','حجم الفيديو يتجاوز 40 ميجابايت. اضغطه أولًا.','er');$('vfile').value='';return}
+  try{var id=await uploadFile(f,'mp4',function(p){msg('fm','جارِ رفع الفيديو '+Math.round(p*100)+'%','ok')});var a=getBlocks();a.push({video:id,title:f.name.replace(/\.mp4$/i,'')});setBlocks(a);msg('fm','تم رفع الفيديو وإدراجه في المحتوى.','ok')}
+  catch(e){msg('fm','فشل رفع الفيديو: '+(e.code||e.message),'er')}
+  $('vfile').value='';
+};
+window.upAuPhoto=async function(){var f=$('aufile').files[0];if(!f)return;msg('libm','جارِ رفع الصورة','ok');try{$('aup').value=await upload(f);msg('libm','تم رفع صورة الكاتب.','ok')}catch(e){msg('libm','فشل رفع الصورة.','er')}};
+window.upBkCover=async function(){var f=$('bkcvf').files[0];if(!f)return;msg('libm','جارِ رفع الغلاف','ok');try{$('bkcv').value=await upload(f);msg('libm','تم رفع الغلاف.','ok')}catch(e){msg('libm','فشل رفع الغلاف.','er')}};
+function lrow(t,s,btns){
+  var r=document.createElement('div');r.className='item';var l=document.createElement('div'),b=document.createElement('b');b.textContent=t;var sm=document.createElement('small');sm.textContent=s;l.appendChild(b);l.appendChild(sm);
+  var a=document.createElement('div');a.className='row';a.style.marginTop='0';
+  btns.forEach(function(x){var bt=document.createElement('button');bt.className='btn'+(x[2]?' d':'');bt.textContent=x[0];bt.onclick=x[1];a.appendChild(bt)});
+  r.appendChild(l);r.appendChild(a);return r;
+}
+async function loadLib(){
+  try{
+    var a=await getDocs(collection(db,'khauthors'));AUTHS=a.docs.map(function(d){var o=d.data();o.id=d.id;return o}).sort(function(x,y){return String(x.name).localeCompare(String(y.name),'ar')});
+    var b=await getDocs(query(collection(db,'khbooks'),orderBy('t','desc')));BKS=b.docs.map(function(d){var o=d.data();o.id=d.id;return o});
+    renderLib();renderOv();
+  }catch(e){msg('libm','تعذر قراءة المكتبة: '+(e.code||e.message),'er')}
+}
+function renderLib(){
+  var al=$('aulist');al.innerHTML='';if(!AUTHS.length)al.textContent='لا يوجد كتّاب بعد.';
+  AUTHS.forEach(function(x){al.appendChild(lrow(x.name,BKS.filter(function(b){return b.authorId===x.id}).length+' كتاب',[['تعديل',function(){editAuthor(x.id)}],['حذف',function(){delAuthor(x.id)},1]]))});
+  var sel=$('bka'),cur=sel.value;sel.innerHTML='';var o0=document.createElement('option');o0.value='';o0.textContent='اختر الكاتب';sel.appendChild(o0);
+  AUTHS.forEach(function(x){var o=document.createElement('option');o.value=x.id;o.textContent=x.name;sel.appendChild(o)});sel.value=cur;
+  var dl=$('bkcats');dl.innerHTML='';var cs={};BKS.forEach(function(b){if(b.cat)cs[b.cat]=1});Object.keys(cs).forEach(function(c){var o=document.createElement('option');o.value=c;dl.appendChild(o)});
+  var bl=$('bklist');bl.innerHTML='';if(!BKS.length)bl.textContent='لا توجد كتب بعد.';
+  BKS.forEach(function(b){bl.appendChild(lrow(b.title,(b.authorName||'')+' - '+(b.cat||''),[['فتح',function(){var u=siteUrl(true);if(u)window.open(u.replace(/#.*$/,'')+'#/book/'+b.id,'_blank')}],['تعديل',function(){editBook(b.id)}],['حذف',function(){delBook(b.id)},1]]))});
+}
+window.saveAuthor=async function(){
+  var n=$('aun').value.trim();if(!n){msg('libm','اسم الكاتب مطلوب.','er');return}
+  var d={name:n,photo:$('aup').value.trim(),bio:$('aub').value.trim()};
+  try{
+    if(editAu){await setDoc(doc(db,'khauthors',editAu),d,{merge:true});var bs=BKS.filter(function(b){return b.authorId===editAu});for(var i=0;i<bs.length;i++)await setDoc(doc(db,'khbooks',bs[i].id),{authorName:n},{merge:true})}
+    else{d.t=Date.now();await addDoc(collection(db,'khauthors'),d)}
+    msg('libm','تم حفظ الكاتب.','ok');clearAu();loadLib();
+  }catch(e){msg('libm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.clearAu=function(){editAu=null;['aun','aup','aub'].forEach(function(i){$(i).value=''});$('aufile').value=''};
+function editAuthor(id){var x=AUTHS.filter(function(a){return a.id===id})[0];if(!x)return;editAu=id;$('aun').value=x.name||'';$('aup').value=x.photo||'';$('aub').value=x.bio||'';msg('libm','تعديل الكاتب: '+x.name,'ok');window.scrollTo({top:$('aun').getBoundingClientRect().top+scrollY-120,behavior:'smooth'})}
+async function delAuthor(id){
+  if(BKS.some(function(b){return b.authorId===id})){msg('libm','لا يمكن حذف كاتب له كتب. احذف كتبه أولًا.','er');return}
+  if(!confirm('حذف الكاتب نهائيًا؟'))return;
+  try{await deleteDoc(doc(db,'khauthors',id));loadLib()}catch(e){msg('libm','تعذر الحذف: '+(e.code||e.message),'er')}
+}
+window.saveBook=async function(){
+  var t=$('bkt').value.trim(),au=$('bka').value,cover=$('bkcv').value.trim();
+  if(!t||!au){msg('libm','اسم الكتاب والكاتب مطلوبان.','er');return}
+  if(!cover){msg('libm','ارفع غلاف الكتاب.','er');return}
+  var f=$('bkpdf').files[0],old=editBk?BKS.filter(function(x){return x.id===editBk})[0]:null,fid=old?old.fileId:'',oldFid=null;
+  var url=$('bkurl').value.trim(),pu=old&&old.pdfUrl?old.pdfUrl:'';
+  if(url){if(!/^https?:\/\/\S+\.pdf(\?\S*)?$/i.test(url)){msg('libm','الرابط يجب أن ينتهي بـ .pdf','er');return}pu=url}
+  if(!f&&!fid&&!pu){msg('libm','اختر ملف PDF أو الصق رابطًا ينتهي بـ .pdf','er');return}
+  if(f&&!/\.pdf$/i.test(f.name)){msg('libm','الملف يجب أن ينتهي بـ .pdf','er');return}
+  if(f&&f.size>25e6){msg('libm','حجم الكتاب يتجاوز 25 ميجابايت. اضغطه أولًا.','er');return}
+  try{
+    if(f){fid2=await uploadFile(f,'pdf',function(p){msg('libm','جارِ رفع الكتاب '+Math.round(p*100)+'%','ok')});oldFid=fid;fid=fid2;pu=''}
+    var a=AUTHS.filter(function(x){return x.id===au})[0];
+    if(!f&&url&&fid){oldFid=fid;fid=''}
+    var d={title:t,desc:$('bkd').value.trim(),cat:$('bkc').value.trim(),authorId:au,authorName:a?a.name:'',cover:cover,fileId:fid,pdfUrl:pu,t:old?old.t:Date.now()};
+    if(editBk)await setDoc(doc(db,'khbooks',editBk),d);else await addDoc(collection(db,'khbooks'),d);
+    if(oldFid)delFile(oldFid);
+    msg('libm','تم حفظ الكتاب.','ok');clearBook();loadLib();
+  }catch(e){msg('libm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+var fid2='';
+window.clearBook=function(){editBk=null;['bkt','bkd','bkc','bkcv','bkurl'].forEach(function(i){$(i).value=''});$('bka').value='';$('bkpdf').value='';$('bkcvf').value='';$('bkhint').textContent=''};
+function editBook(id){var b=BKS.filter(function(x){return x.id===id})[0];if(!b)return;editBk=id;$('bkt').value=b.title||'';$('bkd').value=b.desc||'';$('bkc').value=b.cat||'';$('bka').value=b.authorId||'';$('bkcv').value=b.cover||'';$('bkurl').value=b.pdfUrl||'';$('bkhint').textContent='الملف الحالي محفوظ. اختر ملفًا جديدًا فقط لاستبداله.';msg('libm','تعديل الكتاب: '+b.title,'ok');window.scrollTo({top:$('bkt').getBoundingClientRect().top+scrollY-120,behavior:'smooth'})}
+async function delBook(id){
+  var b=BKS.filter(function(x){return x.id===id})[0];if(!b||!confirm('حذف الكتاب وملفه نهائيًا؟'))return;
+  try{if(b.fileId)await delFile(b.fileId);await deleteDoc(doc(db,'khbooks',id));loadLib()}catch(e){msg('libm','تعذر الحذف: '+(e.code||e.message),'er')}
+}
+var TAB='ov',UNR=0,TN={post:'مقال',project:'مشروع',news:'خبر'},TABS=[['ov','نظرة عامة'],['post','المقالات'],['project','المشاريع'],['news','الأخبار'],['lib','المكتبة'],['wall','الخلفيات'],['app','التطبيق'],['vuln','الثغرات'],['users','المستخدمون'],['sup','الدعم'],['pay','المدفوعات'],['sh','التصوير'],['msg','الرسائل'],['set','الإعدادات']];
+function buildTabs(){var t=$('tabsb');t.innerHTML='';TABS.forEach(function(x){var b=document.createElement('button');b.className='btn'+(x[0]===TAB?' on':'');b.textContent=x[1];b.onclick=function(){showTab(x[0])};t.appendChild(b)})}
+window.showTab=function(t){
+  TAB=t;try{sessionStorage.setItem('atab',t)}catch(e){}
+  var map={ov:'ov',post:'edit',project:'edit',news:'edit',lib:'lib',wall:'wall',app:'app',vuln:'vuln',users:'users',sup:'sup',pay:'pay',sh:'sh',msg:'msg',set:'set'};
+  document.querySelectorAll('[data-sec]').forEach(function(c){c.style.display=c.dataset.sec===map[t]?'':'none'});
+  if(map[t]==='edit'){$('type').value=t;$('type').parentElement.style.display='none';resetForm(true);$('ft').textContent=TN[t]+' جديد';loadList()}
+  buildTabs();window.scrollTo(0,0);if(t==='ov')renderOv();
+};
+function initTabs(){
+  [['ft','edit'],['list','edit'],['bklist','lib'],['wgrid','wall'],['apkurl','app'],['vtitle','vuln'],['ausearch','users'],['banlist','users'],['wltitle','app'],['ibgk','users'],['suplist','sup'],['shlist','sh'],['inbox','msg'],['vbase','set'],['ntt','set'],['ovs','ov']].forEach(function(p){var c=$(p[0]).closest('.card');if(c)c.dataset.sec=p[1]});
+  var s='ov';try{s=sessionStorage.getItem('atab')||'ov'}catch(e){}showTab(s);
+}
+function renderOv(){
+  var o=$('ovs');if(!o)return;o.innerHTML='';
+  var c=function(t){return CACHE.filter(function(x){return x.type===t}).length};
+  var g=document.createElement('div');g.className='two';g.style.gridTemplateColumns='1fr 1fr 1fr';
+  [['المقالات',c('post'),'post'],['المشاريع',c('project'),'project'],['الأخبار',c('news'),'news'],['الكتب',BKS.length,'lib'],['الكتّاب',AUTHS.length,'lib'],['الخلفيات',WALLS.length,'wall'],['الثغرات',VULNS_A.length,'vuln'],['المستخدمون',AUS.length,'users'],['رسائل جديدة',UNR,'msg']].forEach(function(x){
+    var d=document.createElement('div');d.className='card';d.style.cssText='padding:14px;text-align:center;cursor:pointer;margin:0';
+    var n=document.createElement('div');n.style.cssText='font-size:26px;font-weight:700';n.textContent=x[1];
+    var l=document.createElement('div');l.className='m';l.style.margin='4px 0 0';l.textContent=x[0];d.appendChild(n);d.appendChild(l);d.onclick=function(){showTab(x[2])};g.appendChild(d);
+  });
+  o.appendChild(g);var v=document.createElement('p');v.className='m';v.style.marginTop='12px';v.textContent=($('vinfo')&&$('vinfo').textContent)||'';o.appendChild(v);
+}
+window.addLink=function(){
+  var u=$('lnk').value.trim();if(!/^https?:\/\/\S+$/i.test(u)){msg('fm','الصق رابطًا صحيحًا يبدأ بـ http.','er');return}
+  var a=getBlocks(),t=$('bt').value.trim();
+  if(/\.mp4(\?\S*)?$/i.test(u))a.push({video:'link',src:u,title:t||'فيديو'});
+  else if(/\.pdf(\?\S*)?$/i.test(u))a.push({pdf:u,title:t||'ملف PDF'});
+  else{msg('fm','الرابط يجب أن ينتهي بـ .mp4 أو .pdf','er');return}
+  setBlocks(a);$('lnk').value='';msg('fm','تم إدراج الرابط في المحتوى.','ok');
+};
+var WALLS=[],WSEL={};
+async function upImg(file){
+  var fd=new FormData();fd.append('image',file);
+  var r=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB,{method:'POST',body:fd}),j=await r.json();
+  if(!j.success)throw new Error('upload');
+  var d=j.data;return {url:d.url,thumb:(d.medium&&d.medium.url)||d.display_url||d.url,w:Number(d.width)||0,h:Number(d.height)||0};
+}
+async function loadWalls(){
+  try{var s=await getDocs(query(collection(db,'khwalls'),orderBy('t','desc')));WALLS=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});renderWalls();renderOv()}
+  catch(e){msg('wm','تعذر قراءة الخلفيات: '+(e.code||e.message),'er')}
+}
+function renderWalls(){
+  var g=$('wgrid');g.innerHTML='';$('wcnt').textContent='('+WALLS.length+')';
+  WALLS.forEach(function(w){
+    var d=document.createElement('div');d.className='wi'+(WSEL[w.id]?' sel':'');
+    var im=document.createElement('img');im.src=w.thumb||w.url;im.alt='';im.loading='lazy';d.appendChild(im);
+    var x=document.createElement('button');x.className='x';x.textContent='x';x.onclick=async function(e){e.stopPropagation();if(!confirm('حذف هذه الخلفية؟'))return;try{await deleteDoc(doc(db,'khwalls',w.id));delete WSEL[w.id];loadWalls()}catch(er){msg('wm','تعذر الحذف','er')}};d.appendChild(x);
+    d.onclick=function(){if(WSEL[w.id])delete WSEL[w.id];else WSEL[w.id]=1;d.classList.toggle('sel')};
+    g.appendChild(d);
+  });
+}
+window.wallSelAll=function(){var all=WALLS.length&&Object.keys(WSEL).length===WALLS.length;WSEL={};if(!all)WALLS.forEach(function(w){WSEL[w.id]=1});renderWalls()};
+window.wallDelSel=async function(){
+  var ids=Object.keys(WSEL);if(!ids.length){msg('wm','حدد صورًا أولًا.','er');return}
+  if(!confirm('حذف '+ids.length+' خلفية نهائيًا؟'))return;
+  var ok=0;for(var i=0;i<ids.length;i++){try{await deleteDoc(doc(db,'khwalls',ids[i]));ok++}catch(e){}}
+  WSEL={};msg('wm','تم حذف '+ok+' خلفية.','ok');loadWalls();
+};
+window.upWalls=async function(list){
+  var files=Array.prototype.filter.call(list||[],function(f){return /^image\//.test(f.type)});
+  $('wfiles').value='';
+  if(!files.length){msg('wm','اختر ملفات صور فقط.','er');return}
+  var n=files.length,i=0,done=0,fail=0,bad=0;
+  $('wbar').style.display='block';$('wprog').style.width='0';
+  async function w(){
+    while(i<n){
+      var idx=i++,f=files[idx];
+      if(f.size>32e6){bad++;continue}
+      try{var r=await upImg(f);await addDoc(collection(db,'khwalls'),{url:r.url,thumb:r.thumb,w:r.w,h:r.h,size:f.size,t:Date.now()+idx});done++}catch(e){console.error(e);fail++}
+      $('wprog').style.width=Math.round((done+fail+bad)/n*100)+'%';msg('wm','جارِ الرفع: '+done+' من '+n+(fail?' - فشل '+fail:''),'ok');
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  msg('wm','تم رفع '+done+' من '+n+' خلفية.'+(fail?' فشل '+fail+' (أعد رفعها).':'')+(bad?' تم تخطي '+bad+' لأن حجمها يتجاوز 32 ميجابايت.':''),fail||bad?'er':'ok');
+  setTimeout(function(){$('wbar').style.display='none'},1500);loadWalls();
+};
+window.upNtImg=async function(){var f=$('ntf').files[0];if(!f)return;msg('ntm','جارِ رفع الصورة','ok');try{$('nti').value=await upload(f);msg('ntm','تم رفع الصورة.','ok')}catch(e){msg('ntm','فشل رفع الصورة.','er')}};
+window.sendNotify=async function(){
+  var t=$('ntt').value.trim();if(!t){msg('ntm','اكتب العنوان.','er');return}
+  var d={title:t,body:$('ntb').value.trim(),link:$('ntl').value.trim(),t:Date.now()},im=$('nti').value.trim(),bl=$('ntbl').value.trim(),bu=$('ntbu').value.trim();
+  if(im){if(!/^https:\/\//i.test(im)){msg('ntm','رابط الصورة يجب أن يبدأ بـ https://','er');return}d.img=im}
+  if(bl||bu){if(!bl||!bu){msg('ntm','الزر يحتاج نصًا ورابطًا معًا.','er');return}if(!/^https:\/\//i.test(bu)&&!/^#\//.test(bu)){msg('ntm','رابط الزر يجب أن يبدأ بـ https:// أو #/','er');return}d.btn=bl;d.btnUrl=bu}
+  try{await addDoc(collection(db,'khnotify'),d);msg('ntm','تم إرسال الإشعار.','ok');['ntt','ntb','ntl','nti','ntbl','ntbu'].forEach(function(i){$(i).value=''});$('ntf').value=''}
+  catch(e){msg('ntm','تعذر الإرسال: '+(e.code||e.message),'er')}
+};
+var APPD={icon:'',shots:[],apkUrl:'',version:'',size:'',updates:[]};
+async function loadApp(){
+  try{
+    var s=await getDoc(doc(db,'khmeta','app'));
+    if(s.exists())APPD=Object.assign({icon:'',shots:[],apkUrl:'',version:'',size:'',updates:[]},s.data());
+    $('apicu').value=APPD.icon||'';$('apkurl').value=APPD.apkUrl||'';$('apver').value=APPD.version||'';$('apsz').value=APPD.size||'';
+    renderAppLists();
+  }catch(e){msg('apm','تعذر قراءة بيانات التطبيق: '+(e.code||e.message),'er')}
+}
+function renderAppLists(){
+  var g=$('apshots');g.innerHTML='';
+  (APPD.shots||[]).forEach(function(u,i){
+    var d=document.createElement('div');d.className='wi';d.style.aspectRatio='9/16';
+    var im=document.createElement('img');im.src=u;im.alt='';d.appendChild(im);
+    var x=document.createElement('button');x.className='x';x.textContent='x';x.onclick=function(e){e.stopPropagation();APPD.shots.splice(i,1);renderAppLists()};d.appendChild(x);g.appendChild(d);
+  });
+  var L=$('uplist');L.innerHTML='';
+  (APPD.updates||[]).forEach(function(u,i){L.appendChild(lrow('الإصدار '+u.v,(u.d||'')+(u.n?' - '+u.n:''),[['حذف',function(){APPD.updates.splice(i,1);renderAppLists();saveApp()},1]]))});
+}
+window.upAppIcon=async function(){
+  var f=$('apic').files[0];if(!f)return;msg('apm','جارِ رفع الأيقونة','ok');
+  try{$('apicu').value=await upload(f);msg('apm','تم رفع الأيقونة. اضغط حفظ.','ok')}catch(e){msg('apm','فشل رفع الأيقونة.','er')}
+};
+window.upAppShots=async function(list){
+  var files=Array.prototype.filter.call(list||[],function(f){return /^image\//.test(f.type)});
+  if(!files.length)return;var ok=0;
+  for(var i=0;i<files.length;i++){
+    msg('apm','جارِ رفع الصورة '+(i+1)+' من '+files.length,'ok');
+    try{APPD.shots.push(await upload(files[i]));ok++}catch(e){}
+  }
+  $('apshot').value='';renderAppLists();msg('apm','تم رفع '+ok+' صورة. اضغط حفظ.',ok?'ok':'er');
+};
+window.apkAuto=async function(){
+  var url=$('apkurl').value.trim();if(!url){msg('apm','اكتب رابط التحميل أولًا.','er');return}
+  msg('apm','جارِ جلب الحجم...','ok');
+  var size=0,m=url.match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/releases\/download\/([^\/]+)\/([^\/?#]+)/i);
+  try{
+    if(m){var r=await fetch('https://api.github.com/repos/'+m[1]+'/'+m[2]+'/releases/tags/'+m[3]);
+      if(r.ok){var j=await r.json(),nm=decodeURIComponent(m[4]),a=(j.assets||[]).filter(function(x){return x.name===nm})[0];if(a)size=a.size}}
+    if(!size){var h=await fetch(url,{method:'HEAD'});size=Number(h.headers.get('content-length'))||0}
+  }catch(e){}
+  if(size){$('apsz').value=(size/1048576).toFixed(1);msg('apm','الحجم: '+(size/1048576).toFixed(1)+' ميجابايت. اضغط حفظ.','ok')}
+  else msg('apm','تعذر جلب الحجم تلقائيًا، اكتبه يدويًا.','er');
+};
+window.saveApp=async function(){
+  var url=$('apkurl').value.trim();
+  if(url&&!/^https?:\/\/\S+\.apk(\?\S*)?$/i.test(url)){msg('apm','الرابط يجب أن ينتهي بـ .apk','er');return}
+  try{
+    await setDoc(doc(db,'khmeta','app'),{icon:$('apicu').value.trim(),shots:APPD.shots||[],apkUrl:url,version:$('apver').value.trim(),size:$('apsz').value.trim(),updates:APPD.updates||[]},{merge:true});
+    msg('apm','تم الحفظ. الصفحة جاهزة في الموقع.','ok');
+  }catch(e){msg('apm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.addUpdate=function(){
+  var v=$('upv').value.trim(),n=$('upn').value.trim();
+  if(!v){msg('apm','اكتب رقم الإصدار.','er');return}
+  APPD.updates=[{v:v,n:n,d:new Date().toISOString().slice(0,10)}].concat(APPD.updates||[]);
+  $('upv').value='';$('upn').value='';renderAppLists();saveApp();
+};
+var VULNS_A=[],editV=null,AUS=[],AKEY={},IBK={},BANS={},aiUid=null;
+async function loadVulns(){
+  try{var s=await getDocs(query(collection(db,'khvulns'),orderBy('t','desc')));VULNS_A=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});renderVulnList();renderOv()}
+  catch(e){msg('vm2','تعذر قراءة الثغرات: '+(e.code||e.message),'er')}
+}
+function renderVulnList(){
+  var L=$('vlist');L.innerHTML='';if(!VULNS_A.length){L.textContent='لا توجد ثغرات بعد.';return}
+  VULNS_A.forEach(function(x){L.appendChild(lrow(x.title,(x.company||'')+' - '+(x.severity||'')+' - '+(x.status||''),[['تعديل',function(){editVuln(x.id)}],['حذف',function(){delVuln(x.id)},1]]))});
+}
+window.upVLogo=async function(){var f=$('vlogof').files[0];if(!f)return;msg('vm2','جارِ رفع الشعار','ok');try{$('vlogo').value=await upload(f);msg('vm2','تم رفع الشعار.','ok')}catch(e){msg('vm2','فشل رفع الشعار.','er')}};
+window.saveVuln=async function(){
+  var t=$('vtitle').value.trim(),co=$('vco').value.trim();
+  if(!t||!co){msg('vm2','العنوان واسم الشركة مطلوبان.','er');return}
+  var d={title:t,company:co,kind:$('vkind').value.trim(),logo:$('vlogo').value.trim(),severity:$('vsev').value,status:$('vstat').value,cvss:$('vcvss').value.trim(),dFound:$('vdf').value,dFixed:$('vdx').value,summary:$('vsum').value.trim(),details:$('vdet').value.trim(),fix:$('vfix').value.trim(),refs:$('vref').value.trim()};
+  try{
+    if(editV){var old=VULNS_A.filter(function(x){return x.id===editV})[0];d.t=old?old.t:Date.now();await setDoc(doc(db,'khvulns',editV),d)}
+    else{d.t=Date.now();await addDoc(collection(db,'khvulns'),d)}
+    msg('vm2','تم الحفظ.','ok');clearVuln();loadVulns();
+  }catch(e){msg('vm2','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.clearVuln=function(){editV=null;['vtitle','vco','vkind','vlogo','vcvss','vdf','vdx','vsum','vdet','vfix','vref'].forEach(function(i){$(i).value=''});$('vlogof').value='';$('vsev').value='medium';$('vstat').value='fixed'};
+function editVuln(id){
+  var x=VULNS_A.filter(function(i){return i.id===id})[0];if(!x)return;editV=id;
+  $('vtitle').value=x.title||'';$('vco').value=x.company||'';$('vkind').value=x.kind||'';$('vlogo').value=x.logo||'';$('vsev').value=x.severity||'medium';$('vstat').value=x.status||'fixed';
+  $('vcvss').value=x.cvss||'';$('vdf').value=x.dFound||'';$('vdx').value=x.dFixed||'';$('vsum').value=x.summary||'';$('vdet').value=x.details||'';$('vfix').value=x.fix||'';$('vref').value=x.refs||'';
+  msg('vm2','تعديل: '+x.title,'ok');window.scrollTo({top:$('vtitle').getBoundingClientRect().top+scrollY-120,behavior:'smooth'});
+}
+async function delVuln(id){if(!confirm('حذف هذه الثغرة نهائيًا؟'))return;try{await deleteDoc(doc(db,'khvulns',id));loadVulns()}catch(e){msg('vm2','تعذر الحذف: '+(e.code||e.message),'er')}}
+async function loadUsers(){
+  try{
+    var s=await getDocs(collection(db,'kjbvv'));
+    AUS=s.docs.map(function(d){var o=d.data();return {id:d.id,name:o.name||'',email:o.email||'',phone:o.phone||'',username:o.username||'',domains:o.domains||[],createdAt:o.createdAt||'',lastLogin:o.lastLogin||'',provider:o.provider||''}});
+    AUS.sort(function(x,y){return String(y.lastLogin||y.createdAt).localeCompare(String(x.lastLogin||x.createdAt))});
+    var k=await getDocs(collection(db,'khaikeys'));AKEY={};k.forEach(function(d){AKEY[d.id]={model:d.data().model||''}});
+    try{var k2=await getDocs(collection(db,'khibkeys'));IBK={};k2.forEach(function(d){IBK[d.id]=1})}catch(e){}
+    $('uscnt').textContent='('+AUS.length+')';renderUsers();renderOv();
+  }catch(e){msg('aum','تعذر قراءة المستخدمين: '+(e.code||e.message)+' (انشر القواعد الجديدة من ملف firestore.rules)','er')}
+}
+window.renderUsers=function(){
+  var q=($('ausearch').value||'').toLowerCase(),L=$('ausers');L.innerHTML='';
+  var l=AUS.filter(function(u){return (u.name+' '+u.email+' '+u.phone+' '+u.username).toLowerCase().indexOf(q)>-1}).slice(0,80);
+  if(!l.length){L.textContent='لا يوجد مستخدمون.';return}
+  function dt(s){try{return s?new Date(s).toLocaleDateString('ar-EG'):'-'}catch(e){return '-'}}
+  l.forEach(function(u){L.appendChild(lrow((BANS[u.id]?'[محظور] ':'')+(u.name||u.email||u.id),(u.email||'')+(u.phone?' - '+u.phone:'')+' - انضم '+dt(u.createdAt)+' - آخر دخول '+dt(u.lastLogin)+(AKEY[u.id]?' - مفتاح مخصص':'')+(IBK[u.id]?' - IntelBase':''),[['مفتاح',function(){pickUser(u.id)}],BANS[u.id]?['رفع الحظر',function(){unbanUser(u.id)}]:['حظر',function(){banUser(u.id,u.name,u.email)},1]]))});
+};
+window.exportUsers=function(){
+  var rows=[['الاسم','البريد','الهاتف','اسم المستخدم','المجالات','تاريخ الانضمام','آخر دخول']].concat(AUS.map(function(u){return [u.name,u.email,u.phone,u.username,(u.domains||[]).join(' | '),u.createdAt,u.lastLogin]}));
+  var csv='\ufeff'+rows.map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
+  var b=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='users.csv';document.body.appendChild(a);a.click();a.remove();
+};
+function pickUser(id){
+  aiUid=id;var u=AUS.filter(function(x){return x.id===id})[0];
+  $('aform').style.display='block';$('aulabel').textContent='المستخدم: '+((u&&(u.name||u.email))||id);$('aukey').value='';$('aumodel').value=(AKEY[id]&&AKEY[id].model)||'';
+  msg('aum',AKEY[id]?'للمستخدم مفتاح مخصص. اكتب مفتاحًا جديدًا لاستبداله.':'لا يوجد مفتاح مخصص لهذا المستخدم.','ok');
+}
+window.saveAiKey=async function(){
+  if(!aiUid)return;var k=$('aukey').value.trim();if(!k){msg('aum','الصق المفتاح أولًا.','er');return}
+  try{await setDoc(doc(db,'khaikeys',aiUid),{key:k,model:$('aumodel').value.trim(),t:Date.now()});AKEY[aiUid]={model:$('aumodel').value.trim()};$('aukey').value='';msg('aum','تم تعيين المفتاح لهذا المستخدم.','ok');renderUsers()}
+  catch(e){msg('aum','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.saveIbKey=async function(){
+  if(!aiUid)return;var k=$('auib').value.trim();if(!k){msg('aum','الصق مفتاح IntelBase أولًا.','er');return}
+  try{await setDoc(doc(db,'khibkeys',aiUid),{key:k,t:Date.now()});IBK[aiUid]=1;$('auib').value='';msg('aum','تم تعيين مفتاح IntelBase لهذا المستخدم.','ok');renderUsers()}
+  catch(e){msg('aum','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.delIbKey=async function(){
+  if(!aiUid)return;if(!confirm('إزالة مفتاح IntelBase لهذا المستخدم؟'))return;
+  try{await deleteDoc(doc(db,'khibkeys',aiUid));delete IBK[aiUid];msg('aum','تمت إزالة المفتاح.','ok');renderUsers()}catch(e){msg('aum','تعذر الحذف: '+(e.code||e.message),'er')}
+};
+window.delAiKey=async function(){
+  if(!aiUid)return;if(!confirm('إزالة المفتاح المخصص لهذا المستخدم؟'))return;
+  try{await deleteDoc(doc(db,'khaikeys',aiUid));delete AKEY[aiUid];msg('aum','تمت إزالة المفتاح.','ok');renderUsers()}catch(e){msg('aum','تعذر الحذف: '+(e.code||e.message),'er')}
+};
+var SUPL=[],SUPCUR=null,SUPUN=null,SUPIMG='';
+function loadSupport(){
+  onSnapshot(query(collection(db,'khsupport'),orderBy('last','desc'),limit(100)),function(s){SUPL=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});renderSupList()},function(e){msg('supm','تعذر قراءة الدعم: '+(e.code||e.message)+' (انشر القواعد الجديدة)','er')});
+}
+function renderSupList(){
+  var L=$('suplist');L.innerHTML='';
+  var un=SUPL.filter(function(x){return x.unread}).length;$('supcnt').textContent=un?'('+un+' غير مقروءة)':'';
+  if(!SUPL.length){L.textContent='لا توجد محادثات بعد.';return}
+  SUPL.forEach(function(x){L.appendChild(lrow((x.unread?'● ':'')+(x.name||x.email||x.id),(x.email||'')+' - '+(x.lastText||''),[['فتح',function(){openSup(x.id)}]]))});
+}
+function openSup(uid){
+  SUPCUR=uid;if(SUPUN)SUPUN();var x=SUPL.filter(function(i){return i.id===uid})[0]||{};
+  $('supthread').style.display='block';$('suphd').textContent='المحادثة مع: '+(x.name||x.email||uid);
+  updateDoc(doc(db,'khsupport',uid),{unread:false}).catch(function(){});
+  SUPUN=onSnapshot(query(collection(db,'khsupport',uid,'msgs'),orderBy('t','asc'),limit(300)),function(s){
+    var B=$('supmsgs');B.innerHTML='';
+    s.forEach(function(d){
+      var m=d.data(),r=document.createElement('div');r.className='item';
+      var b=document.createElement('b');b.textContent=(m.from==='admin'?'أنت':'المستخدم')+' - '+new Date(m.t).toLocaleString('ar-EG');r.appendChild(b);
+      if(m.text){var p=document.createElement('p');p.textContent=m.text;p.style.margin='4px 0';r.appendChild(p)}
+      if(m.img){var im=document.createElement('img');im.src=m.img;im.style.cssText='max-width:200px;border-radius:10px;display:block';r.appendChild(im)}
+      if(m.btn&&m.btn.u){var sm=document.createElement('small');sm.textContent='زر: '+(m.btn.l||'')+' -> '+m.btn.u;r.appendChild(sm)}
+      B.appendChild(r);
+    });
+    B.scrollTop=B.scrollHeight;
+  });
+}
+window.supImg=async function(){var f=$('supimgf').files[0];if(!f)return;msg('supm','جارِ رفع الصورة','ok');try{SUPIMG=await upload(f);msg('supm','تم رفع الصورة وستُرسل مع الرسالة.','ok')}catch(e){msg('supm','فشل رفع الصورة.','er')}};
+window.supSend=async function(){
+  if(!SUPCUR)return;var t=$('suptxt').value.trim(),bl=$('supbl').value.trim(),bu=$('supbu').value.trim();
+  if(!t&&!SUPIMG&&!(bl&&bu)){msg('supm','اكتب رسالة أو أرفق صورة أو زرًّا.','er');return}
+  if((bl&&!bu)||(!bl&&bu)){msg('supm','الزر يحتاج نصًا ورابطًا معًا.','er');return}
+  if(bu&&!/^https:\/\//i.test(bu)&&!/^#\//.test(bu)){msg('supm','رابط الزر يجب أن يبدأ بـ https:// أو #/','er');return}
+  var d={from:'admin',t:Date.now()};if(t)d.text=t;if(SUPIMG)d.img=SUPIMG;if(bl&&bu)d.btn={l:bl,u:bu};
+  try{
+    await addDoc(collection(db,'khsupport',SUPCUR,'msgs'),d);
+    await setDoc(doc(db,'khsupport',SUPCUR),{last:Date.now(),lastText:'رد: '+(t||'مرفق').slice(0,100),unread:false},{merge:true});
+    $('suptxt').value='';$('supbl').value='';$('supbu').value='';$('supimgf').value='';SUPIMG='';msg('supm','تم الإرسال.','ok');
+  }catch(e){msg('supm','تعذر الإرسال: '+(e.code||e.message),'er')}
+};
+async function loadWelcome(){try{var s=await getDoc(doc(db,'khmeta','welcome'));if(s.exists()){$('wltitle').value=s.data().title||'';$('wltext').value=s.data().text||''}}catch(e){}}
+window.saveWelcome=async function(){try{await setDoc(doc(db,'khmeta','welcome'),{title:$('wltitle').value.trim(),text:$('wltext').value.trim(),t:Date.now()});msg('wlm','تم الحفظ.','ok')}catch(e){msg('wlm','تعذر الحفظ: '+(e.code||e.message),'er')}};
+async function loadIbg(){try{var s=await getDoc(doc(db,'khmeta','ibkey'));if(s.exists()){$('ibgmode').value=s.data().mode||'key';msg('ibgm',s.data().mode==='proxy'?'الوضع الحالي: وسيط آمن.':'يوجد مفتاح عام محفوظ.','ok')}}catch(e){}}
+window.testIbg=async function(){
+  var k=$('ibgk').value.trim();if(!k){msg('ibgm','الصق المفتاح أولًا ثم اختبره.','er');return}
+  msg('ibgm','جارِ الاختبار...','ok');
+  try{
+    var r=await fetch('https://api.intelbase.is/lookup/modules',{headers:{'x-api-key':k}});
+    if(r.status===401||r.status===403){msg('ibgm','المفتاح غير صالح أو الخطة لا تدعم الـ API.','er');return}
+    if(!r.ok){msg('ibgm','رد الخدمة: '+r.status,'er');return}
+    var j=await r.json();msg('ibgm','المفتاح صالح. عدد المصادر: '+(j.count||'-'),'ok');
+  }catch(e){msg('ibgm','تعذر الاختبار من المتصفح (غالبًا قيد CORS). احفظ المفتاح واختبره من التطبيق بزر اختبار IntelBase.','er')}
+};
+window.saveIbg=async function(){
+  var k=$('ibgk').value.trim(),m=$('ibgmode').value;
+  if(m==='key'&&!k){msg('ibgm','الصق المفتاح أولًا.','er');return}
+  try{await setDoc(doc(db,'khmeta','ibkey'),m==='proxy'?{mode:'proxy',t:Date.now()}:{mode:'key',key:k,t:Date.now()});$('ibgk').value='';msg('ibgm','تم الحفظ.','ok')}
+  catch(e){msg('ibgm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+window.delIbg=async function(){if(!confirm('حذف إعداد IntelBase العام؟'))return;try{await deleteDoc(doc(db,'khmeta','ibkey'));msg('ibgm','تم الحذف.','ok')}catch(e){msg('ibgm','تعذر الحذف.','er')}};
+function loadBans(){
+  onSnapshot(collection(db,'khbans'),function(s){BANS={};s.forEach(function(d){BANS[d.id]=d.data()});renderBans();if($('ausers'))renderUsers()},function(e){msg('banm','تعذر قراءة المحظورين: '+(e.code||e.message)+' (انشر القواعد الجديدة)','er')});
+}
+function renderBans(){
+  var L=$('banlist');L.innerHTML='';var ids=Object.keys(BANS);$('bancnt').textContent='('+ids.length+')';
+  if(!ids.length){L.textContent='لا يوجد محظورون.';return}
+  ids.forEach(function(id){var b=BANS[id];L.appendChild(lrow(b.name||b.email||id,(b.email||'')+' - '+(b.reason||'بدون سبب')+' - '+(b.until?'حتى '+new Date(b.until).toLocaleString('ar-EG'):'دائم'),[['رفع الحظر',function(){unbanUser(id)},1]]))});
+}
+window.banUser=async function(id,name,email){
+  var why=prompt('سبب الحظر (يظهر للمستخدم):','مخالفة شروط الاستخدام');if(why===null)return;
+  var dur=Number($('bandur').value)||0;
+  try{await setDoc(doc(db,'khbans',id),{uid:id,email:email||'',name:name||'',reason:why.trim(),until:dur?Date.now()+dur:0,t:Date.now()});msg('banm','تم الحظر فورًا.','ok')}
+  catch(e){msg('banm','تعذر الحظر: '+(e.code||e.message),'er')}
+};
+window.unbanUser=async function(id){if(!confirm('رفع الحظر عن هذا المستخدم؟'))return;try{await deleteDoc(doc(db,'khbans',id));msg('banm','تم رفع الحظر.','ok')}catch(e){msg('banm','تعذر رفع الحظر.','er')}};
+window.supBan=function(){if(!SUPCUR)return;var x=SUPL.filter(function(i){return i.id===SUPCUR})[0]||{};banUser(SUPCUR,x.name,x.email)};
+var SHL=[];
+function loadShots(){
+  onSnapshot(query(collection(db,'khshots'),orderBy('t','desc'),limit(100)),function(s){SHL=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});renderShots()},function(e){msg('shm','تعذر قراءة الطلبات: '+(e.code||e.message)+' (انشر القواعد الجديدة)','er')});
+}
+function renderShots(){
+  var L=$('shlist');L.innerHTML='';var pend=SHL.filter(function(x){return x.status==='pending'}).length;$('shcnt').textContent=pend?'('+pend+' قيد المراجعة)':'';
+  if(!SHL.length){L.textContent='لا توجد طلبات.';return}
+  function st(x){if(x.status==='approved')return x.until>Date.now()?'موافق عليه حتى '+new Date(x.until).toLocaleString('ar-EG'):'منتهي';return x.status==='rejected'?'مرفوض':'قيد المراجعة'}
+  SHL.slice().sort(function(a,b){return ((b.status==='pending')-(a.status==='pending'))||(b.t-a.t)}).forEach(function(x){
+    var acts=[];
+    if(x.status==='pending'){acts.push(['موافقة (24 ساعة)',function(){shDecide(x.id,true)}]);acts.push(['رفض',function(){shDecide(x.id,false)},1])}
+    else if(x.status==='approved'&&x.until>Date.now())acts.push(['إلغاء الإذن',function(){shRevoke(x.id)},1]);
+    L.appendChild(lrow((x.name||x.email||x.id)+' - '+st(x),(x.email||'')+(x.phone?' - '+x.phone:'')+' - '+(x.kind||'')+' - السبب: '+(x.reason||''),acts));
+  });
+}
+window.shDecide=async function(id,ok){
+  try{
+    if(ok)await updateDoc(doc(db,'khshots',id),{status:'approved',until:Date.now()+86400000,decided:Date.now(),note:''});
+    else{var n=prompt('سبب الرفض (يظهر للمستخدم):','');if(n===null)return;await updateDoc(doc(db,'khshots',id),{status:'rejected',until:0,decided:Date.now(),note:n.trim()})}
+    msg('shm',ok?'تمت الموافقة لمدة 24 ساعة.':'تم الرفض.','ok');
+  }catch(e){msg('shm','تعذر التنفيذ: '+(e.code||e.message),'er')}
+};
+window.shRevoke=async function(id){if(!confirm('إلغاء إذن التصوير لهذا المستخدم؟'))return;try{await updateDoc(doc(db,'khshots',id),{status:'rejected',until:0,decided:Date.now(),note:'أُلغي الإذن'});msg('shm','تم إلغاء الإذن.','ok')}catch(e){msg('shm','تعذر الإلغاء.','er')}};
+window.addBox=function(k){
+  var t=$('bt').value.trim();if(!t){msg('fm','اكتب النص أولًا.','er');return}
+  var T={note:'التنبيه',warn:'التحذير',must:'يجب'};
+  var a=getBlocks();a.push({box:k,title:T[k],text:t});setBlocks(a);$('bt').value='';
+};
+window.save=async function(){
+  var title=$('title').value.trim();
+  if(!title){msg('fm','العنوان مطلوب.','er');return}
+  var raw=$('body').value.trim();
+  var data={type:$('type').value,title:title,summary:$('summary').value.trim(),link:$('link').value.trim(),cover:$('cover').value.trim(),body:raw,tags:$('tags').value.trim(),pinned:$('pinned').checked,draft:$('draft').checked};
+  try{
+    if(editing){
+      var old=CACHE.filter(function(x){return x.id===editing})[0];
+      data.createdAt=old?old.createdAt:new Date().toISOString();
+      await setDoc(doc(db,'khcontent',editing),data);
+    }else{
+      data.createdAt=new Date().toISOString();
+      await addDoc(collection(db,'khcontent'),data);
+    }
+    msg('fm','تم الحفظ.','ok');resetForm(true);loadList();
+  }catch(e){msg('fm','تعذر الحفظ. تأكد من قواعد Firestore: '+(e.code||e.message),'er')}
+};
+window.resetForm=function(keep){
+  editing=null;['title','summary','link','cover','body','tags'].forEach(function(i){$(i).value=''});$('pinned').checked=false;$('draft').checked=false;
+  $('cpv').style.display='none';$('ft').textContent=(TN[TAB]||'محتوى')+' جديد';$('savebtn').textContent='نشر';
+  if(keep!==true)msg('fm','','ok'),$('fm').className='msg';
+};
+async function loadVis(){
+  try{var r=doc(db,'khmeta','stats'),s=await getDoc(r);
+    if(!s.exists()){await setDoc(r,{base:0,real:0});s=await getDoc(r)}
+    var d=s.data(),b=Number(d.base)||0,x=Number(d.real)||0;
+    $('vbase').value=b;$('vnotice').value=d.notice||'';$('vinfo').textContent='الفعلي المسجل: '+x+' | الإجمالي المعروض للزوار: '+(b+x);renderOv();
+  }catch(e){msg('vm','تعذر قراءة العداد: '+(e.code||e.message),'er')}
+}
+window.saveNotice=async function(){try{await setDoc(doc(db,'khmeta','stats'),{notice:$('vnotice').value.trim()},{merge:true});msg('vm','تم تحديث الإعلان.','ok')}catch(e){msg('vm','تعذر الحفظ: '+(e.code||e.message),'er')}};
+window.saveBase=async function(){
+  var n=Math.max(0,parseInt($('vbase').value,10)||0);
+  try{var r=doc(db,'khmeta','stats'),s=await getDoc(r),x=s.exists()?(Number(s.data().real)||0):0;
+    await setDoc(r,{base:n},{merge:true});msg('vm','تم الحفظ.','ok');loadVis()}catch(e){msg('vm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+async function loadList(){
+  var ST={};try{(await getDocs(collection(db,'khstats'))).forEach(function(d){ST[d.id]=d.data()})}catch(e){}
+  var s=await getDocs(query(collection(db,'khcontent'),orderBy('createdAt','desc')));
+  CACHE=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});
+  var cn=function(t){return CACHE.filter(function(x){return x.type===t}).length};$('cnts').textContent='مقالات: '+cn('post')+' | مشاريع: '+cn('project')+' | أخبار: '+cn('news')+' | مسودات: '+CACHE.filter(function(x){return x.draft}).length;renderOv();
+  var L=$('list');L.innerHTML='';
+  var N={post:'مقال',news:'خبر',project:'مشروع'};
+  if(!CACHE.filter(function(x){return x.type===TAB}).length){L.textContent='لا يوجد محتوى في هذا القسم بعد.';return}
+  CACHE.filter(function(it){return it.type===TAB}).forEach(function(it){
+    var r=document.createElement('div');r.className='item';
+    var l=document.createElement('div');var b=document.createElement('b');b.textContent=it.title;
+    var sm=document.createElement('small');sm.textContent=(N[it.type]||'')+' - '+new Date(it.createdAt).toLocaleDateString('ar-EG')+(it.pinned?' - مثبت':'')+(it.draft?' - مسودة':'')+(ST[it.id]?' - '+(ST[it.id].views||0)+' مشاهدة - '+(ST[it.id].likes||0)+' إعجاب':'');
+    l.appendChild(b);l.appendChild(sm);
+    var a=document.createElement('div');a.className='row';a.style.marginTop='0';
+    var op=document.createElement('button');op.className='btn';op.textContent='فتح';op.onclick=function(){openItem(it.id)};
+    var e=document.createElement('button');e.className='btn';e.textContent='تعديل';e.onclick=function(){edit(it.id)};
+    var d=document.createElement('button');d.className='btn d';d.textContent='حذف';d.onclick=function(){del(it.id)};
+    a.appendChild(op);a.appendChild(e);a.appendChild(d);r.appendChild(l);r.appendChild(a);L.appendChild(r);
+  });
+}
+function edit(id){
+  var it=CACHE.filter(function(x){return x.id===id})[0];if(!it)return;
+  editing=id;$('type').value=it.type;$('title').value=it.title;$('summary').value=it.summary||'';$('link').value=it.link||'';
+  $('cover').value=it.cover||'';$('body').value=it.body||'';$('tags').value=it.tags||'';$('pinned').checked=!!it.pinned;$('draft').checked=!!it.draft;
+  if(it.cover){$('cpv').src=it.cover;$('cpv').style.display='block'}
+  $('ft').textContent='تعديل المحتوى';$('savebtn').textContent='حفظ التعديل';window.scrollTo({top:0,behavior:'smooth'});
+}
+async function del(id){
+  if(!confirm('حذف هذا المحتوى نهائيا؟'))return;
+  await deleteDoc(doc(db,'khcontent',id));loadList();
+}
+
+/* ===== المدفوعات (إضافة) ===== */
+window.KAH={db:db,auth:auth,fb:{doc:doc,getDoc:getDoc,setDoc:setDoc,addDoc:addDoc,collection:collection,query:query,where:where,orderBy:orderBy,limit:limit,onSnapshot:onSnapshot,getDocs:getDocs,updateDoc:updateDoc},toast:function(t){},NATIVE:false,get CU(){return auth.currentUser},get UD(){return {}}};
+var PAYS=[],PAYF='all',PSUBS={},PCONF={},payOn=false,qrStream=null;
+var PSTN={pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض'};
+var PMCARD=[['bankName','البنك'],['holder','الاسم على البطاقة'],['cardNo','رقم البطاقة']];
+var PMVODA=[['number','الرقم'],['name','الاسم']];
+var PMS=[
+['bank','تحويل بنكي',[['bankName','اسم البنك'],['holder','اسم صاحب الحساب'],['iban','IBAN'],['accountNo','رقم الحساب']]],
+['card1','بطاقة فيزا (بنك 1)',PMCARD],['card2','بطاقة فيزا (بنك 2)',PMCARD],
+['insta','إنستا باي',[['handle','عنوان الدفع'],['name','الاسم'],['phone','الهاتف']]],
+['voda1','فودافون كاش (1)',PMVODA],['voda2','فودافون كاش (2)',PMVODA]];
+function pmk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt)e.textContent=txt;return e}
+function payFmt(t){try{return t?new Date(t).toLocaleString('ar-EG'):'-'}catch(e){return '-'}}
+function payDl(name,data,type){var b=new Blob([data],{type:type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function payImgModal(src){
+  var o=pmk('div');o.style.cssText='position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.88);z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto';
+  var im=document.createElement('img');im.src=src;im.style.cssText='max-width:100%;max-height:92vh;border-radius:12px;background:#fff';
+  o.appendChild(im);o.onclick=function(){o.remove()};document.body.appendChild(o);
+}
+function payUserName(uid){var u=AUS.filter(function(x){return x.id===uid})[0];return u?(u.name||u.email||uid):uid}
+
+function loadPay(){
+  loadPayConf();loadSubs();
+  $('sbuser').onfocus=fillSbUsers;
+  if(payOn)return;payOn=true;
+  onSnapshot(query(collection(db,'khpay'),orderBy('t','desc'),limit(150)),function(s){
+    PAYS=s.docs.map(function(d){var o=d.data();o.id=d.id;return o});renderPays();
+  },function(e){msg('paym','تعذر قراءة طلبات الدفع: '+(e.code||e.message)+' (انشر firestore.rules)','er')});
+}
+window.payFilter=function(v){PAYF=v;renderPays()};
+function renderPays(){
+  var L=$('paylist');L.innerHTML='';
+  var pend=PAYS.filter(function(x){return x.status==='pending'}).length;$('paycnt').textContent=pend?'('+pend+' قيد المراجعة)':'';
+  var l=PAYS.filter(function(x){return PAYF==='all'||x.status===PAYF});
+  if(!l.length){L.textContent='لا توجد طلبات.';return}
+  l.slice().sort(function(a,b){return ((b.status==='pending')-(a.status==='pending'))||((b.t||0)-(a.t||0))}).forEach(function(p){
+    var acts=[['الإيصال',function(){payReceipt(p.id)}],['الفاتورة',function(){payInvPdf(p.id)}]];
+    if(p.status==='pending'){acts.push(['موافقة',function(){payApprove(p.id)}]);acts.push(['رفض',function(){payReject(p.id)},1])}
+    else acts.push(['حذف الإيصال',function(){payDelRcpt(p.id)},1]);
+    var sub=[p.email||'',p.phone||'',(p.amount||'')+' '+(p.currency||''),p.cycle==='yearly'?'سنوي':'شهري',p.methodTitle||p.method||'',p.sender?'المحوِّل: '+p.sender:'',p.acct?'حساب: '+p.acct:'',p.tdate?'تاريخ التحويل: '+p.tdate:'',p.ref?'مرجع: '+p.ref:'',payFmt(p.t)];
+    if(p.status==='approved'&&p.until)sub.push('ينتهي '+payFmt(p.until));
+    if(p.status==='rejected'&&p.reason)sub.push('السبب: '+p.reason);
+    L.appendChild(lrow((p.name||p.email||p.uid||p.id)+' - '+(p.planName||p.plan)+' - '+(PSTN[p.status]||p.status),sub.filter(Boolean).join(' - '),acts));
+  });
+}
+window.payReceipt=async function(id){
+  try{var s=await getDoc(doc(db,'khrcpt',id));if(!s.exists()||!s.data().img){msg('paym','لا يوجد إيصال لهذا الطلب.','er');return}payImgModal(s.data().img)}
+  catch(e){msg('paym','تعذر قراءة الإيصال: '+(e.code||e.message),'er')}
+};
+window.payInvPdf=async function(id){
+  try{
+    var s=await getDoc(doc(db,'khinvpdf',id));if(!s.exists()||!s.data().pdf){msg('paym','لا توجد فاتورة PDF لهذا الطلب.','er');return}
+    var bin=atob(String(s.data().pdf).replace(/^data:[^,]*,/,'')),u8=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+    payDl('invoice-'+id+'.pdf',u8,'application/pdf');
+  }catch(e){msg('paym','تعذر تحميل الفاتورة: '+(e.code||e.message),'er')}
+};
+async function payInvoice(id,p,st,extra){
+  try{
+    if(!window.TAM||!TAM.invData||!TAM.storeInvoice)return false;
+    if(TAM.setConf&&PCONF)try{TAM.setConf(PCONF)}catch(e){}
+    var inv=await TAM.invData(id,p,st,extra||{});
+    await TAM.storeInvoice(db,KAH.fb,id,inv);return true;
+  }catch(e){console.error(e);return false}
+}
+window.payApprove=async function(id){
+  var p=PAYS.filter(function(x){return x.id===id})[0];if(!p)return;
+  if(!confirm('الموافقة على الطلب وتفعيل الباقة '+(p.planName||p.plan)+' لـ '+(p.name||p.email)+'؟'))return;
+  try{
+    var now=Date.now(),days=p.cycle==='yearly'?365:30,sr=await getDoc(doc(db,'khsubs',p.uid)),sd=sr.exists()?sr.data():null;
+    var base=(sd&&sd.plan===p.plan&&Number(sd.until)>now)?Number(sd.until):now,until=base+days*86400000;
+    await setDoc(doc(db,'khsubs',p.uid),{plan:p.plan,until:until,cycle:p.cycle,lastPay:id},{merge:true});
+    await updateDoc(doc(db,'khpay',id),{status:'approved',until:until,decided:now});
+    var ok=await payInvoice(id,p,'paid',{until:until});
+    msg('paym','تمت الموافقة وتفعيل الباقة حتى '+payFmt(until)+(ok?'.':' لكن تعذر إنشاء الفاتورة (راجع تحميل tam.js).'),ok?'ok':'er');loadSubs();
+  }catch(e){msg('paym','تعذرت الموافقة: '+(e.code||e.message),'er')}
+};
+window.payReject=async function(id){
+  var p=PAYS.filter(function(x){return x.id===id})[0];if(!p)return;
+  var why=prompt('سبب الرفض (يظهر للمستخدم):','');if(why===null)return;why=why.trim();
+  try{
+    await updateDoc(doc(db,'khpay',id),{status:'rejected',reason:why,decided:Date.now()});
+    var ok=await payInvoice(id,p,'failed',{reason:why});
+    msg('paym','تم رفض الطلب'+(ok?'.':' لكن تعذر إنشاء الفاتورة.'),ok?'ok':'er');
+  }catch(e){msg('paym','تعذر الرفض: '+(e.code||e.message),'er')}
+};
+window.payDelRcpt=async function(id){
+  if(!confirm('حذف صورة الإيصال نهائيًا؟'))return;
+  try{await deleteDoc(doc(db,'khrcpt',id));msg('paym','تم حذف الإيصال.','ok')}catch(e){msg('paym','تعذر الحذف: '+(e.code||e.message),'er')}
+};
+
+async function loadSubs(){
+  try{var s=await getDocs(collection(db,'khsubs'));PSUBS={};s.forEach(function(d){PSUBS[d.id]=d.data()});renderSubs()}
+  catch(e){msg('sbm','تعذر قراءة الاشتراكات: '+(e.code||e.message),'er')}
+}
+function fillSbUsers(){
+  var s=$('sbuser');if(s.options.length===AUS.length+1)return;var c=s.value;s.innerHTML='';
+  var o0=document.createElement('option');o0.value='';o0.textContent='اختر المستخدم';s.appendChild(o0);
+  AUS.forEach(function(u){var o=document.createElement('option');o.value=u.id;o.textContent=(u.name||u.email||u.id)+(u.email&&u.name?' - '+u.email:'');s.appendChild(o)});s.value=c;
+}
+function renderSubs(){
+  fillSbUsers();var L=$('sblist');L.innerHTML='';var now=Date.now();
+  var ids=Object.keys(PSUBS).filter(function(k){return PSUBS[k].plan&&PSUBS[k].plan!=='free'}).sort(function(a,b){return (Number(PSUBS[b].until)||0)-(Number(PSUBS[a].until)||0)});
+  var act=ids.filter(function(k){return Number(PSUBS[k].until)>now}).length;$('sbcnt').textContent='('+act+' فعّال)';
+  if(!ids.length){L.textContent='لا توجد اشتراكات.';return}
+  ids.forEach(function(k){
+    var s=PSUBS[k],on=Number(s.until)>now;
+    L.appendChild(lrow(payUserName(k)+' - '+s.plan+' - '+(on?'فعّال':'منتهي'),'حتى '+payFmt(Number(s.until))+(s.cycle?' - '+s.cycle:''),[['إلغاء',function(){payCancelSub(k)},1]]));
+  });
+}
+window.payGrant=async function(){
+  var uid=$('sbuser').value,plan=$('sbplan').value,days=parseInt($('sbdays').value,10)||0;
+  if(!uid){msg('sbm','اختر المستخدم.','er');return}
+  if(days<1){msg('sbm','أدخل عدد أيام صحيحًا.','er');return}
+  try{
+    var now=Date.now(),old=PSUBS[uid],base=(old&&old.plan===plan&&Number(old.until)>now)?Number(old.until):now;
+    await setDoc(doc(db,'khsubs',uid),{plan:plan,until:base+days*86400000,cycle:'manual',lastPay:'manual'},{merge:true});
+    msg('sbm','تم منح الاشتراك.','ok');loadSubs();
+  }catch(e){msg('sbm','تعذر المنح: '+(e.code||e.message),'er')}
+};
+async function payCancelSub(uid){
+  if(!confirm('إلغاء اشتراك هذا المستخدم الآن؟'))return;
+  try{await setDoc(doc(db,'khsubs',uid),{plan:'free',until:0},{merge:true});msg('sbm','تم إلغاء الاشتراك.','ok');loadSubs()}
+  catch(e){msg('sbm','تعذر الإلغاء: '+(e.code||e.message),'er')}
+}
+
+window.loadPayConf=async function(){
+  try{
+    var s=await getDoc(doc(db,'khmeta','payconf'));PCONF=s.exists()?s.data():{};
+    $('pccur').value=PCONF.currency||'';
+    $('pcplans').value=JSON.stringify(PCONF.plans||{},null,1);
+    var dl=PCONF.limits||((window.TAM&&TAM.DEF&&TAM.DEF.limits)||{});
+    $('pclim').value=JSON.stringify(dl,null,1);
+    if(PCONF.plans){['plus','pro'].forEach(function(k){if(PCONF.plans[k]&&PCONF.plans[k].name){for(var i=0;i<$('sbplan').options.length;i++){if($('sbplan').options[i].value===k)$('sbplan').options[i].textContent=PCONF.plans[k].name+' ('+k+')'}}})}
+    renderPm();
+  }catch(e){msg('pcm','تعذر قراءة الإعدادات: '+(e.code||e.message),'er')}
+};
+function renderPm(){
+  var box=$('pcmeth');box.innerHTML='';var ms=PCONF.methods||{};
+  PMS.forEach(function(m){
+    var k=m[0],v=ms[k]||{},d=pmk('div','card');d.style.cssText='padding:14px;margin:10px 0';
+    d.appendChild(pmk('h2','',m[1]));
+    var lb=pmk('label');lb.style.cssText='display:flex;gap:6px;align-items:center;margin:0 0 6px';
+    var cb=document.createElement('input');cb.type='checkbox';cb.id='pm_'+k+'_on';cb.style.cssText='width:auto;margin:0';cb.checked=!!v.on;
+    lb.appendChild(cb);lb.appendChild(document.createTextNode('مفعّل'));d.appendChild(lb);
+    d.appendChild(pmk('label','','الشعار'));
+    var ff=document.createElement('input');ff.type='file';ff.accept='image/*';
+    var lg=document.createElement('input');lg.id='pm_'+k+'_logo';lg.dir='ltr';lg.placeholder='رابط الشعار';lg.value=v.logo||'';lg.style.marginTop='6px';
+    ff.onchange=async function(){
+      var f=ff.files[0];if(!f)return;msg('pcm','جارِ رفع الشعار','ok');
+      try{lg.value=await upload(f);msg('pcm','تم رفع الشعار. اضغط حفظ.','ok')}catch(e){msg('pcm','فشل رفع الشعار.','er')}
+    };
+    d.appendChild(ff);d.appendChild(lg);
+    m[2].forEach(function(f){
+      d.appendChild(pmk('label','',f[1]));
+      var i=document.createElement('input');i.id='pm_'+k+'_'+f[0];i.dir='auto';i.value=v[f[0]]||'';d.appendChild(i);
+    });
+    box.appendChild(d);
+  });
+}
+window.payConfSave=async function(){
+  var plans,lim;
+  try{plans=JSON.parse($('pcplans').value||'{}')}catch(e){msg('pcm','JSON الباقات غير صالح.','er');return}
+  try{lim=JSON.parse($('pclim').value||'{}')}catch(e){msg('pcm','JSON الحدود غير صالح.','er');return}
+  var ms={};
+  PMS.forEach(function(m){
+    var k=m[0],o={on:$('pm_'+k+'_on').checked,logo:$('pm_'+k+'_logo').value.trim()};
+    m[2].forEach(function(f){o[f[0]]=$('pm_'+k+'_'+f[0]).value.trim()});ms[k]=o;
+  });
+  var data={currency:$('pccur').value.trim(),plans:plans,limits:lim,methods:ms};
+  try{
+    var r=doc(db,'khmeta','payconf'),s=await getDoc(r);
+    if(s.exists())await updateDoc(r,data);else await setDoc(r,data);
+    msg('pcm','تم حفظ الإعدادات.','ok');loadPayConf();
+  }catch(e){msg('pcm','تعذر الحفظ: '+(e.code||e.message),'er')}
+};
+
+window.payGenKeys=async function(){
+  if(!window.TAM||!TAM.genKeys){msg('pkm','ملف tam.js غير محمّل.','er');return}
+  var has='';try{has=localStorage.getItem('tam_priv')||''}catch(e){}
+  if(has&&!confirm('يوجد مفتاح خاص محفوظ. إنشاء مفتاح جديد سيجعل رموز الفواتير السابقة غير قابلة للفك. هل حمّلت نسخة احتياطية وتريد المتابعة؟'))return;
+  try{
+    var k=await TAM.genKeys();
+    var pub=k.pub||k.publicKey||k.pubKey||k.public,pr=k.priv||k.privateKey||k.private;
+    if(!pub||!pr)throw new Error('شكل المفاتيح المرجَعة غير متوقع');
+    var prs=typeof pr==='string'?pr:JSON.stringify(pr);
+    localStorage.setItem('tam_priv',prs);
+    await setDoc(doc(db,'khmeta','payconf'),{pubKey:pub},{merge:true});
+    payDl('tam-private-key.json',prs,'application/json');
+    msg('pkm','تم إنشاء المفاتيح ونشر المفتاح العام وتنزيل نسخة المفتاح الخاص. احتفظ بها في مكان آمن.','ok');
+  }catch(e){msg('pkm','تعذر إنشاء المفاتيح: '+(e.code||e.message),'er')}
+};
+window.payKeyBackup=function(){
+  var p='';try{p=localStorage.getItem('tam_priv')||''}catch(e){}
+  if(!p){msg('pkm','لا يوجد مفتاح خاص في هذا المتصفح.','er');return}
+  payDl('tam-private-key.json',p,'application/json');
+};
+window.payKeyRestore=function(){
+  var f=$('pkrest').files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){
+    try{JSON.parse(r.result);localStorage.setItem('tam_priv',String(r.result).trim());msg('pkm','تمت استعادة المفتاح الخاص.','ok')}
+    catch(e){msg('pkm','الملف غير صالح.','er')}
+    $('pkrest').value='';
+  };
+  r.readAsText(f);
+};
+
+window.payQrDecode=async function(text){
+  text=String(typeof text==='string'?text:$('qrtxt').value).trim();
+  var m=text.match(/TAM1\.[^\s]+/),out=$('qrout');out.innerHTML='';
+  if(!m){msg('qrm','الرمز غير صالح. يجب أن يبدأ بـ TAM1.','er');return}
+  var parts=m[0].split('.'),payId=parts[1],priv=null,dec=null,derr='';
+  try{priv=JSON.parse(localStorage.getItem('tam_priv')||'null')}catch(e){}
+  if(!priv)derr='المفتاح الخاص غير موجود في هذا المتصفح.';
+  else if(!window.TAM||!TAM.decodeQr)derr='ملف tam.js غير محمّل.';
+  else{try{dec=await TAM.decodeQr(m[0],priv);if(typeof dec==='string')dec=JSON.parse(dec)}catch(e){dec=null;derr='تعذر فك التشفير: '+(e.message||e)}}
+  var pay=null;try{var ps=await getDoc(doc(db,'khpay',payId));if(ps.exists())pay=ps.data()}catch(e){}
+  function row(k,v){if(v===undefined||v===null||v==='')return;var d=pmk('div');d.style.cssText='padding:6px 0;border-bottom:1px solid var(--b);font-size:13px';var b=pmk('b','',k+': ');d.appendChild(b);d.appendChild(document.createTextNode(String(v)));out.appendChild(d)}
+  row('رقم الطلب',payId);
+  if(dec){row('الفاتورة',dec.i);row('المستخدم',dec.u?payUserName(dec.u):'');row('المبلغ',dec.a);row('الحالة',dec.s)}
+  if(pay){row('الاسم',pay.name);row('البريد',pay.email);row('الهاتف',pay.phone);row('الباقة',pay.planName||pay.plan);row('الدورة',pay.cycle==='yearly'?'سنوي':'شهري');row('المبلغ المدفوع',(pay.amount||'')+' '+(pay.currency||''));row('طريقة الدفع',pay.methodTitle||pay.method);row('حالة الطلب',PSTN[pay.status]||pay.status)}
+  else row('تنبيه','لم يُعثر على طلب الدفع في قاعدة البيانات.');
+  if(derr)msg('qrm',derr+(pay?' عُرضت بيانات الطلب من قاعدة البيانات.':''),'er');else msg('qrm','تم فك الرمز.','ok');
+};
+window.payQrImg=async function(){
+  var f=$('qrfile').files[0];if(!f)return;
+  if(!('BarcodeDetector' in window)){msg('qrm','المتصفح لا يدعم قراءة QR من الصور. الصق الرمز يدويًا.','er');$('qrfile').value='';return}
+  try{
+    var bm=await createImageBitmap(f),r=await new BarcodeDetector({formats:['qr_code']}).detect(bm);
+    if(!r.length){msg('qrm','لم يُعثر على رمز QR في الصورة.','er')}else{$('qrtxt').value=r[0].rawValue;payQrDecode(r[0].rawValue)}
+  }catch(e){msg('qrm','تعذرت قراءة الصورة: '+(e.message||e),'er')}
+  $('qrfile').value='';
+};
+function payQrStop(){if(qrStream){qrStream.getTracks().forEach(function(t){t.stop()});qrStream=null}var v=$('qrvid');v.srcObject=null;v.style.display='none'}
+window.payQrCam=async function(){
+  if(qrStream){payQrStop();return}
+  if(!('BarcodeDetector' in window)||!navigator.mediaDevices){msg('qrm','المتصفح لا يدعم مسح QR بالكاميرا. استخدم صورة الفاتورة أو الصق الرمز.','er');return}
+  try{
+    qrStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    var v=$('qrvid');v.srcObject=qrStream;v.style.display='block';await v.play();
+    var det=new BarcodeDetector({formats:['qr_code']});
+    (function loop(){
+      if(!qrStream)return;
+      det.detect(v).then(function(r){
+        if(r&&r.length){var t=r[0].rawValue;payQrStop();$('qrtxt').value=t;payQrDecode(t)}else setTimeout(loop,250);
+      }).catch(function(){setTimeout(loop,400)});
+    })();
+  }catch(e){payQrStop();msg('qrm','تعذر فتح الكاميرا: '+(e.message||e),'er')}
+};
+/* ===== نهاية المدفوعات ===== */
+
+try{if(window.top!==window.self)window.top.location=window.self.location}catch(e){}
+var idleT=null;
+function idleReset(){clearTimeout(idleT);idleT=setTimeout(function(){signOut(auth)},30*60*1000)}
+['click','keydown','touchstart','scroll'].forEach(function(e){document.addEventListener(e,idleReset,{passive:true})});idleReset();
+</script>
+</body>
+</html>
