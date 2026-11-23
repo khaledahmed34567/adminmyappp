@@ -244,10 +244,10 @@ input,select,textarea{border-radius:13px}
 <div class="msg" id="sbm"></div><div id="sblist" style="margin-top:10px"></div></div>
 
 <div class="card" data-sec="pay" id="pcbox"><h2>إعدادات الباقات والدفع</h2>
-<p class="m">الباقات والحدود تُحرَّر بصيغة JSON على نفس البنية المخزنة في khmeta/payconf (القيمة -1 غير محدود، 0 ممنوع). مفاتيح الحدود: chat, leak, pdf, offline, cvedays, widgets.</p>
+<p class="m">عدّل بيانات كل باقة وحدودها من الخانات مباشرة، ثم اضغط حفظ الإعدادات. في الحدود: القيمة -1 تعني غير محدود، و0 ممنوع، وترك الخانة فارغة يستخدم الافتراضي.</p>
 <label>العملة</label><input id="pccur" dir="ltr" placeholder="EGP">
-<label>الباقات (JSON)</label><textarea id="pcplans" style="min-height:160px"></textarea>
-<label>الحدود (JSON)</label><textarea id="pclim" style="min-height:160px"></textarea>
+<h2 style="margin-top:16px">الباقات</h2><div id="pcplans"></div>
+<h2 style="margin-top:16px">حدود الاستخدام لكل باقة</h2><div id="pclim"></div>
 <h2 style="margin-top:16px">طرق الدفع</h2><div id="pcmeth"></div>
 <div class="row"><button class="btn p" onclick="payConfSave()">حفظ الإعدادات</button><button class="btn" onclick="loadPayConf()">إعادة التحميل</button></div>
 <div class="msg" id="pcm"></div></div>
@@ -1000,13 +1000,85 @@ window.loadPayConf=async function(){
   try{
     var s=await getDoc(doc(db,'khmeta','payconf'));PCONF=s.exists()?s.data():{};
     $('pccur').value=PCONF.currency||'';
-    $('pcplans').value=JSON.stringify(PCONF.plans||{},null,1);
-    var dl=PCONF.limits||((window.TAM&&TAM.DEF&&TAM.DEF.limits)||{});
-    $('pclim').value=JSON.stringify(dl,null,1);
     if(PCONF.plans){['plus','pro'].forEach(function(k){if(PCONF.plans[k]&&PCONF.plans[k].name){for(var i=0;i<$('sbplan').options.length;i++){if($('sbplan').options[i].value===k)$('sbplan').options[i].textContent=PCONF.plans[k].name+' ('+k+')'}}})}
-    renderPm();
+    renderPlans();renderLim();renderPm();
   }catch(e){msg('pcm','تعذر قراءة الإعدادات: '+(e.code||e.message),'er')}
 };
+var PLIMK=[['chat','الشات (يوميًا)'],['leak','فحص التسريبات (يوميًا)'],['pdf','تقرير PDF'],['offline','المحتوى بدون إنترنت'],['cvedays','أيام رادار الثغرات'],['widgets','الودجات']];
+var PLIMMODE='plan';
+function payPlanIds(){var ids=Object.keys(PCONF.plans||{});if(!ids.length)ids=['plus','pro'];return ids}
+function payLimPlans(){return ['free'].concat(payPlanIds())}
+function payLimData(){return PCONF.limits||((window.TAM&&TAM.DEF&&TAM.DEF.limits)||{})}
+function payLimGet(l,p,k){
+  var v=PLIMMODE==='key'?(l[k]&&l[k][p]):(l[p]&&l[p][k]);
+  return (v===undefined||v===null)?'':v;
+}
+function payField(box,label,id,val,type){
+  box.appendChild(pmk('label','',label));
+  var i=document.createElement('input');i.id=id;if(type)i.type=type;i.dir=type==='number'?'ltr':'auto';if(type==='number')i.step='any';i.value=val;box.appendChild(i);
+}
+function renderPlans(){
+  var box=$('pcplans');box.innerHTML='';var P=PCONF.plans||{};
+  payPlanIds().forEach(function(id){
+    var v=P[id]||{},d=pmk('div','card');d.style.cssText='padding:14px;margin:10px 0';
+    d.appendChild(pmk('h2','',(v.name||id)+' ('+id+')'));
+    var lb=pmk('label');lb.style.cssText='display:flex;gap:6px;align-items:center;margin:0 0 6px';
+    var cb=document.createElement('input');cb.type='checkbox';cb.id='pp_'+id+'_on';cb.style.cssText='width:auto;margin:0';cb.checked=(v.on===undefined)?true:!!v.on;
+    lb.appendChild(cb);lb.appendChild(document.createTextNode('الباقة مفعّلة (تظهر للمستخدمين)'));d.appendChild(lb);
+    payField(d,'اسم الباقة','pp_'+id+'_name',v.name||'');
+    var two=pmk('div','two'),c1=pmk('div'),c2=pmk('div');
+    payField(c1,'السعر الشهري','pp_'+id+'_monthly',(v.monthly===undefined||v.monthly===null)?'':v.monthly,'number');
+    payField(c2,'السعر السنوي','pp_'+id+'_yearly',(v.yearly===undefined||v.yearly===null)?'':v.yearly,'number');
+    two.appendChild(c1);two.appendChild(c2);d.appendChild(two);
+    d.appendChild(pmk('label','','المميزات (ميزة في كل سطر)'));
+    var ta=document.createElement('textarea');ta.id='pp_'+id+'_features';ta.style.cssText='min-height:100px;direction:rtl;text-align:right;font-family:inherit';
+    ta.value=Array.isArray(v.features)?v.features.join('\n'):(v.features||'');d.appendChild(ta);
+    box.appendChild(d);
+  });
+}
+function collectPlans(){
+  var o={},P=PCONF.plans||{},bad='';
+  payPlanIds().forEach(function(id){
+    var old=P[id]||{},n={};for(var k in old)n[k]=old[k];
+    var m=$('pp_'+id+'_monthly').value.trim(),y=$('pp_'+id+'_yearly').value.trim();
+    if((m!==''&&isNaN(Number(m)))||(y!==''&&isNaN(Number(y))))bad=id;
+    n.on=$('pp_'+id+'_on').checked;n.name=$('pp_'+id+'_name').value.trim();n.monthly=m===''?0:Number(m);n.yearly=y===''?0:Number(y);
+    var ft=$('pp_'+id+'_features').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+    n.features=(typeof old.features==='string')?ft.join('\n'):ft;
+    o[id]=n;
+  });
+  if(bad){msg('pcm','السعر في الباقة '+bad+' يجب أن يكون رقمًا.','er');return null}
+  return o;
+}
+function renderLim(){
+  var box=$('pclim');box.innerHTML='';var l=payLimData(),ks=PLIMK.map(function(x){return x[0]});
+  PLIMMODE='plan';Object.keys(l).forEach(function(t){if(ks.indexOf(t)>-1)PLIMMODE='key'});
+  payLimPlans().forEach(function(p){
+    var d=pmk('div','card');d.style.cssText='padding:14px;margin:10px 0';
+    d.appendChild(pmk('h2','','حدود الباقة: '+p));
+    PLIMK.forEach(function(k){payField(d,k[1],'pl_'+p+'_'+k[0],payLimGet(l,p,k[0]),'number')});
+    box.appendChild(d);
+  });
+}
+function collectLim(){
+  var o={},mode=PLIMMODE,bad='';
+  try{o=JSON.parse(JSON.stringify(payLimData()))}catch(e){o={}}
+  payLimPlans().forEach(function(p){
+    PLIMK.forEach(function(k){
+      var s=$('pl_'+p+'_'+k[0]).value.trim();
+      if(s!==''&&isNaN(Number(s))){bad=k[1];return}
+      if(mode==='key'){
+        if(s===''){if(o[k[0]])delete o[k[0]][p];return}
+        if(!o[k[0]])o[k[0]]={};o[k[0]][p]=Number(s);
+      }else{
+        if(s===''){if(o[p])delete o[p][k[0]];return}
+        if(!o[p])o[p]={};o[p][k[0]]=Number(s);
+      }
+    });
+  });
+  if(bad){msg('pcm','قيمة الحد "'+bad+'" يجب أن تكون رقمًا.','er');return null}
+  return o;
+}
 function renderPm(){
   var box=$('pcmeth');box.innerHTML='';var ms=PCONF.methods||{};
   PMS.forEach(function(m){
@@ -1031,9 +1103,8 @@ function renderPm(){
   });
 }
 window.payConfSave=async function(){
-  var plans,lim;
-  try{plans=JSON.parse($('pcplans').value||'{}')}catch(e){msg('pcm','JSON الباقات غير صالح.','er');return}
-  try{lim=JSON.parse($('pclim').value||'{}')}catch(e){msg('pcm','JSON الحدود غير صالح.','er');return}
+  var plans=collectPlans(),lim=collectLim();
+  if(plans===null||lim===null)return;
   var ms={};
   PMS.forEach(function(m){
     var k=m[0],o={on:$('pm_'+k+'_on').checked,logo:$('pm_'+k+'_logo').value.trim()};
